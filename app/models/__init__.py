@@ -8,3 +8,4 @@ from app.models.resource import Resource
 from app.models.attachment import Attachment
 from app.models.status_history import StatusHistory
 from app.models.issue_comment import IssueComment
+from app.models.gis import Ward, AdminBoundary

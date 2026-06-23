@@ -7,7 +7,7 @@ import {
   LayoutDashboard, FileText, Landmark, Rss, Settings, 
   HelpCircle, ChevronLeft, ChevronRight, Menu, X, Sun, Moon, 
   Bell, Search, LogOut, ShieldCheck, Users, BarChart3, 
-  Building2, AlertTriangle, CheckCircle, Activity, Archive
+  Building2, AlertTriangle, CheckCircle, Activity, Archive, Map
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -38,6 +38,7 @@ export const GovernmentLayout: React.FC = () => {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard/government', icon: LayoutDashboard },
     { name: 'Issue Management', path: '/dashboard/government/issues', icon: FileText },
+    { name: 'Interactive Map', path: '/dashboard/government/map', icon: Map },
     { name: 'Departments', path: '/dashboard/government/departments', icon: Building2 },
     { name: 'Ward Analytics', path: '/dashboard/government/analytics', icon: BarChart3 },
     { name: 'Reports', path: '/dashboard/government/reports', icon: Archive },

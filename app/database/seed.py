@@ -6,7 +6,9 @@ from app.models.report import Report
 from app.models.user import User
 from app.models.announcement import Announcement
 from app.models.resource import Resource
+from app.models.gis import Ward, AdminBoundary
 from app.core import security
+import json
 
 async def seed_db(session: AsyncSession):
     # 1. Seed Alerts if empty
@@ -253,7 +255,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=45
+                    progress=45,
+                    latitude=37.7892,
+                    longitude=-122.4014
                 ),
                 Report(
                     title="Flickering Streetlight near 22nd Street Station",
@@ -268,7 +272,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=10
+                    progress=10,
+                    latitude=37.7785,
+                    longitude=-122.4820
                 ),
                 Report(
                     title="Illegal Dumping in Alleyway",
@@ -283,7 +289,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=100
+                    progress=100,
+                    latitude=37.7610,
+                    longitude=-122.4162
                 ),
                 Report(
                     title="Exposed Electrical Wiring near Public Park",
@@ -298,7 +306,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=0
+                    progress=0,
+                    latitude=37.8035,
+                    longitude=-122.4371
                 ),
                 Report(
                     title="Water Pipeline Burst on 19th Ave",
@@ -313,7 +323,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=15
+                    progress=15,
+                    latitude=37.7510,
+                    longitude=-122.4760
                 ),
                 Report(
                     title="Unregulated Construction Noise",
@@ -328,7 +340,9 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=30
+                    progress=30,
+                    latitude=37.7720,
+                    longitude=-122.4780
                 ),
                 Report(
                     title="Damaged Guardrail on Overpass",
@@ -343,9 +357,125 @@ async def seed_db(session: AsyncSession):
                     city=user.city,
                     state=user.state,
                     country=user.country,
-                    progress=20
+                    progress=20,
+                    latitude=37.7942,
+                    longitude=-122.3995
                 )
             ]
             session.add_all(reports)
     
+    # 7. Seed Wards if empty
+    result = await session.execute(select(Ward))
+    if not result.scalars().first():
+        wards = [
+            Ward(
+                name="Ward 1 - Richmond",
+                city="San Francisco",
+                population=62000,
+                geojson_polygon=json.dumps({
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-122.51, 37.76],
+                            [-122.45, 37.76],
+                            [-122.45, 37.79],
+                            [-122.51, 37.79],
+                            [-122.51, 37.76]
+                        ]
+                    ]
+                })
+            ),
+            Ward(
+                name="Ward 2 - Marina",
+                city="San Francisco",
+                population=48000,
+                geojson_polygon=json.dumps({
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-122.46, 37.79],
+                            [-122.42, 37.79],
+                            [-122.42, 37.81],
+                            [-122.46, 37.81],
+                            [-122.46, 37.79]
+                        ]
+                    ]
+                })
+            ),
+            Ward(
+                name="Ward 3 - Financial",
+                city="San Francisco",
+                population=35000,
+                geojson_polygon=json.dumps({
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-122.42, 37.78],
+                            [-122.39, 37.78],
+                            [-122.39, 37.81],
+                            [-122.42, 37.81],
+                            [-122.42, 37.78]
+                        ]
+                    ]
+                })
+            ),
+            Ward(
+                name="Ward 4 - Mission",
+                city="San Francisco",
+                population=81000,
+                geojson_polygon=json.dumps({
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-122.43, 37.74],
+                            [-122.40, 37.74],
+                            [-122.40, 37.77],
+                            [-122.43, 37.77],
+                            [-122.43, 37.74]
+                        ]
+                    ]
+                })
+            ),
+            Ward(
+                name="Ward 5 - Sunset",
+                city="San Francisco",
+                population=74000,
+                geojson_polygon=json.dumps({
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [-122.51, 37.71],
+                            [-122.45, 37.71],
+                            [-122.45, 37.76],
+                            [-122.51, 37.76],
+                            [-122.51, 37.71]
+                        ]
+                    ]
+                })
+            )
+        ]
+        session.add_all(wards)
+
+    # 8. Seed Admin Boundary if empty
+    result = await session.execute(select(AdminBoundary))
+    if not result.scalars().first():
+        boundary = AdminBoundary(
+            name="San Francisco City Boundary",
+            boundary_type="City",
+            geojson_polygon=json.dumps({
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [-122.52, 37.70],
+                        [-122.38, 37.70],
+                        [-122.38, 37.82],
+                        [-122.52, 37.82],
+                        [-122.52, 37.70]
+                    ]
+                ]
+            })
+        )
+        session.add(boundary)
+
     await session.commit()
+

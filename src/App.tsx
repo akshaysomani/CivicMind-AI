@@ -10,6 +10,8 @@ import { AIProvider } from './context/AIContext';
 import { CitizenProvider } from './context/CitizenContext';
 import { GovernmentProvider } from './context/GovernmentContext';
 import { IssueProvider } from './context/IssueContext';
+import { MapProvider } from './context/MapContext';
+
 
 // Layout & Route Guard
 import AppLayout from './layout/AppLayout';
@@ -43,6 +45,7 @@ const SavedReports = lazy(() => import('./pages/dashboards/SavedReports'));
 const NearbyAlerts = lazy(() => import('./pages/dashboards/NearbyAlerts'));
 const AchievementsPage = lazy(() => import('./pages/dashboards/AchievementsPage'));
 const HelpCenterPlaceholder = lazy(() => import('./pages/dashboards/Placeholders').then(m => ({ default: m.HelpCenterPlaceholder })));
+const GisMapPage = lazy(() => import('./pages/dashboards/GisMapPage'));
 
 // ── Module 5: Issue Reporting Pages ──────────────────────────────────────────
 const ReportIssuePage = lazy(() => import('./pages/issues/ReportIssuePage'));
@@ -68,8 +71,9 @@ export const App: React.FC = () => {
         <NotificationProvider>
           <AuthProvider>
             <IssueProvider>
-              <CitizenProvider>
-                <GovernmentProvider>
+              <MapProvider>
+                <CitizenProvider>
+                  <GovernmentProvider>
                   <AIProvider>
                     <BrowserRouter>
                       <Suspense
@@ -109,6 +113,7 @@ export const App: React.FC = () => {
                               }
                             >
                               <Route index element={<CitizenDashboard />} />
+                              <Route path="map" element={<GisMapPage />} />
                               {/* Module 5: Full wizard replaces placeholder */}
                               <Route path="report-issue" element={<ReportIssuePage />} />
                               {/* Enhanced MyReports with IssueContext */}
@@ -133,6 +138,7 @@ export const App: React.FC = () => {
                               }
                             >
                               <Route index element={<GovernmentDashboard />} />
+                              <Route path="map" element={<GisMapPage />} />
                               <Route path="issues" element={<GovernmentIssues />} />
                               <Route path="departments" element={<GovernmentDepartments />} />
                               <Route path="analytics" element={<GovernmentWardAnalytics />} />
@@ -173,7 +179,8 @@ export const App: React.FC = () => {
                   </AIProvider>
                 </GovernmentProvider>
               </CitizenProvider>
-            </IssueProvider>
+            </MapProvider>
+          </IssueProvider>
           </AuthProvider>
         </NotificationProvider>
       </AppProvider>
