@@ -7,6 +7,9 @@ import { AppProvider } from './context/AppContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext';
 import { AIProvider } from './context/AIContext';
+import { CitizenProvider } from './context/CitizenContext';
+import { GovernmentProvider } from './context/GovernmentContext';
+import { IssueProvider } from './context/IssueContext';
 
 // Layout & Route Guard
 import AppLayout from './layout/AppLayout';
@@ -15,7 +18,7 @@ import Protected from './components/Protected';
 // Shared Components
 import LoadingSpinner from './components/LoadingSpinner';
 
-// Lazy Loaded Pages
+// Lazy Loaded Pages — Public
 const Landing = lazy(() => import('./pages/Landing'));
 const About = lazy(() => import('./pages/About'));
 const Features = lazy(() => import('./pages/Features'));
@@ -31,7 +34,7 @@ const VerifyEmail = lazy(() => import('./pages/VerifyEmail'));
 const Profile = lazy(() => import('./pages/Profile'));
 const AccountSettings = lazy(() => import('./pages/AccountSettings'));
 
-// Dashboard Pages
+// Dashboard Layouts & Pages
 const DashboardLayout = lazy(() => import('./layout/DashboardLayout'));
 const CitizenDashboard = lazy(() => import('./pages/dashboards/CitizenDashboard'));
 const MyReports = lazy(() => import('./pages/dashboards/MyReports'));
@@ -39,9 +42,13 @@ const CommunityFeed = lazy(() => import('./pages/dashboards/CommunityFeed'));
 const SavedReports = lazy(() => import('./pages/dashboards/SavedReports'));
 const NearbyAlerts = lazy(() => import('./pages/dashboards/NearbyAlerts'));
 const AchievementsPage = lazy(() => import('./pages/dashboards/AchievementsPage'));
-const ReportIssuePlaceholder = lazy(() => import('./pages/dashboards/Placeholders').then(m => ({ default: m.ReportIssuePlaceholder })));
 const HelpCenterPlaceholder = lazy(() => import('./pages/dashboards/Placeholders').then(m => ({ default: m.HelpCenterPlaceholder })));
 
+// ── Module 5: Issue Reporting Pages ──────────────────────────────────────────
+const ReportIssuePage = lazy(() => import('./pages/issues/ReportIssuePage'));
+const IssueDetailPage = lazy(() => import('./pages/issues/IssueDetailPage'));
+
+// Government Dashboard
 const GovernmentLayout = lazy(() => import('./layout/GovernmentLayout'));
 const GovernmentDashboard = lazy(() => import('./pages/dashboards/GovernmentDashboard'));
 const GovernmentIssues = lazy(() => import('./pages/dashboards/GovernmentIssues'));
@@ -54,126 +61,121 @@ const GovernmentReports = lazy(() => import('./pages/dashboards/GovernmentReport
 const NgoDashboard = lazy(() => import('./pages/dashboards/NgoDashboard'));
 const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
 
-import { CitizenProvider } from './context/CitizenContext';
-import { GovernmentProvider } from './context/GovernmentContext';
-
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AppProvider>
         <NotificationProvider>
           <AuthProvider>
-            <CitizenProvider>
-              <GovernmentProvider>
-                <AIProvider>
-                <BrowserRouter>
-                <Suspense
-                  fallback={
-                    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-                      <LoadingSpinner size="lg" text="Loading CivicMind Workspace..." />
-                    </div>
-                  }
-                >
-                  <Routes>
-                    {/* Global layout routes */}
-                    <Route element={<AppLayout />}>
-                      {/* Public routes */}
-                      <Route path="/" element={<Landing />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/features" element={<Features />} />
-                      <Route path="/contact" element={<Contact />} />
-
-                      {/* Auth routes */}
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/forgot-password" element={<ForgotPassword />} />
-                      <Route path="/reset-password" element={<ResetPassword />} />
-                      <Route path="/verify-email" element={<VerifyEmail />} />
-
-                      {/* Protected Profile settings */}
-                      <Route
-                        path="/profile"
-                        element={
-                          <Protected>
-                            <Profile />
-                          </Protected>
-                        }
-                      />
-                      <Route
-                        path="/account-settings"
-                        element={
-                          <Protected>
-                            <AccountSettings />
-                          </Protected>
-                        }
-                      />
-
-                      {/* Protected RBAC Dashboard placeholders */}
-                      <Route
-                        path="/dashboard/citizen"
-                        element={
-                          <Protected allowedRoles={['Citizen']}>
-                            <DashboardLayout />
-                          </Protected>
+            <IssueProvider>
+              <CitizenProvider>
+                <GovernmentProvider>
+                  <AIProvider>
+                    <BrowserRouter>
+                      <Suspense
+                        fallback={
+                          <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+                            <LoadingSpinner size="lg" text="Loading CivicMind Workspace..." />
+                          </div>
                         }
                       >
-                        <Route index element={<CitizenDashboard />} />
-                        <Route path="report-issue" element={<ReportIssuePlaceholder />} />
-                        <Route path="reports" element={<MyReports />} />
-                        <Route path="feed" element={<CommunityFeed />} />
-                        <Route path="saved" element={<SavedReports />} />
-                        <Route path="alerts" element={<NearbyAlerts />} />
-                        <Route path="achievements" element={<AchievementsPage />} />
-                        <Route path="settings" element={<AccountSettings />} />
-                        <Route path="help" element={<HelpCenterPlaceholder />} />
-                      </Route>
-                      <Route
-                        path="/dashboard/government"
-                        element={
-                          <Protected allowedRoles={['Government']}>
-                            <GovernmentLayout />
-                          </Protected>
-                        }
-                      >
-                        <Route index element={<GovernmentDashboard />} />
-                        <Route path="issues" element={<GovernmentIssues />} />
-                        <Route path="departments" element={<GovernmentDepartments />} />
-                        <Route path="analytics" element={<GovernmentWardAnalytics />} />
-                        <Route path="resources" element={<GovernmentResources />} />
-                        <Route path="announcements" element={<GovernmentAnnouncements />} />
-                        <Route path="citizens" element={<GovernmentCitizens />} />
-                        <Route path="reports" element={<GovernmentReports />} />
-                        <Route path="settings" element={<AccountSettings />} />
-                        <Route path="help" element={<HelpCenterPlaceholder />} />
-                      </Route>
-                      <Route
-                        path="/dashboard/ngo"
-                        element={
-                          <Protected allowedRoles={['NGO']}>
-                            <NgoDashboard />
-                          </Protected>
-                        }
-                      />
-                      <Route
-                        path="/dashboard/admin"
-                        element={
-                          <Protected allowedRoles={['Admin']}>
-                            <AdminDashboard />
-                          </Protected>
-                        }
-                      />
+                        <Routes>
+                          {/* Global layout routes */}
+                          <Route element={<AppLayout />}>
+                            {/* Public routes */}
+                            <Route path="/" element={<Landing />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/features" element={<Features />} />
+                            <Route path="/contact" element={<Contact />} />
 
-                      {/* Wildcard 404 Route */}
-                      <Route path="*" element={<NotFound />} />
-                    </Route>
-                  </Routes>
-                </Suspense>
-              </BrowserRouter>
-            </AIProvider>
-          </GovernmentProvider>
-        </CitizenProvider>
-        </AuthProvider>
-      </NotificationProvider>
+                            {/* Auth routes */}
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/reset-password" element={<ResetPassword />} />
+                            <Route path="/verify-email" element={<VerifyEmail />} />
+
+                            {/* Protected Profile & Settings */}
+                            <Route path="/profile" element={<Protected><Profile /></Protected>} />
+                            <Route path="/account-settings" element={<Protected><AccountSettings /></Protected>} />
+
+                            {/* ── Citizen Dashboard ───────────────────────────── */}
+                            <Route
+                              path="/dashboard/citizen"
+                              element={
+                                <Protected allowedRoles={['Citizen']}>
+                                  <DashboardLayout />
+                                </Protected>
+                              }
+                            >
+                              <Route index element={<CitizenDashboard />} />
+                              {/* Module 5: Full wizard replaces placeholder */}
+                              <Route path="report-issue" element={<ReportIssuePage />} />
+                              {/* Enhanced MyReports with IssueContext */}
+                              <Route path="reports" element={<MyReports />} />
+                              {/* Module 5: Issue detail */}
+                              <Route path="reports/:id" element={<IssueDetailPage />} />
+                              <Route path="feed" element={<CommunityFeed />} />
+                              <Route path="saved" element={<SavedReports />} />
+                              <Route path="alerts" element={<NearbyAlerts />} />
+                              <Route path="achievements" element={<AchievementsPage />} />
+                              <Route path="settings" element={<AccountSettings />} />
+                              <Route path="help" element={<HelpCenterPlaceholder />} />
+                            </Route>
+
+                            {/* ── Government Dashboard ────────────────────────── */}
+                            <Route
+                              path="/dashboard/government"
+                              element={
+                                <Protected allowedRoles={['Government']}>
+                                  <GovernmentLayout />
+                                </Protected>
+                              }
+                            >
+                              <Route index element={<GovernmentDashboard />} />
+                              <Route path="issues" element={<GovernmentIssues />} />
+                              <Route path="departments" element={<GovernmentDepartments />} />
+                              <Route path="analytics" element={<GovernmentWardAnalytics />} />
+                              <Route path="resources" element={<GovernmentResources />} />
+                              <Route path="announcements" element={<GovernmentAnnouncements />} />
+                              <Route path="citizens" element={<GovernmentCitizens />} />
+                              <Route path="reports" element={<GovernmentReports />} />
+                              <Route path="settings" element={<AccountSettings />} />
+                              <Route path="help" element={<HelpCenterPlaceholder />} />
+                            </Route>
+
+                            {/* ── NGO Dashboard ───────────────────────────────── */}
+                            <Route
+                              path="/dashboard/ngo"
+                              element={
+                                <Protected allowedRoles={['NGO']}>
+                                  <NgoDashboard />
+                                </Protected>
+                              }
+                            />
+
+                            {/* ── Admin Dashboard ─────────────────────────────── */}
+                            <Route
+                              path="/dashboard/admin"
+                              element={
+                                <Protected allowedRoles={['Admin']}>
+                                  <AdminDashboard />
+                                </Protected>
+                              }
+                            />
+
+                            {/* Wildcard 404 */}
+                            <Route path="*" element={<NotFound />} />
+                          </Route>
+                        </Routes>
+                      </Suspense>
+                    </BrowserRouter>
+                  </AIProvider>
+                </GovernmentProvider>
+              </CitizenProvider>
+            </IssueProvider>
+          </AuthProvider>
+        </NotificationProvider>
       </AppProvider>
     </ThemeProvider>
   );

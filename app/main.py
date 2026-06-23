@@ -16,6 +16,7 @@ from app.database.seed import seed_db
 async def lifespan(app: FastAPI):
     # Ensure static upload directories exist
     os.makedirs("public/uploads/avatars", exist_ok=True)
+    os.makedirs("public/uploads/issues", exist_ok=True)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         
