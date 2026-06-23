@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import { AIProvider } from './context/AIContext';
 import { CitizenProvider } from './context/CitizenContext';
 import { GovernmentProvider } from './context/GovernmentContext';
+import { EmergencyProvider } from './context/EmergencyContext';
 import { IssueProvider } from './context/IssueContext';
 import { MapProvider } from './context/MapContext';
 
@@ -65,6 +66,7 @@ const NgoDashboard = lazy(() => import('./pages/dashboards/NgoDashboard'));
 const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
 const AiAssistantPage = lazy(() => import('./pages/dashboards/AiAssistantPage'));
+const EmergencyDashboardPage = lazy(() => import('./pages/dashboards/EmergencyDashboardPage'));
 
 export const App: React.FC = () => {
   return (
@@ -76,6 +78,7 @@ export const App: React.FC = () => {
               <MapProvider>
                 <CitizenProvider>
                   <GovernmentProvider>
+                  <EmergencyProvider>
                   <AIProvider>
                     <BrowserRouter>
                       <Suspense
@@ -144,6 +147,7 @@ export const App: React.FC = () => {
                               <Route path="map" element={<GisMapPage />} />
                               <Route path="issues" element={<GovernmentIssues />} />
                               <Route path="ai-console" element={<AiConsolePage />} />
+                              <Route path="emergency" element={<EmergencyDashboardPage />} />
                               <Route path="departments" element={<GovernmentDepartments />} />
                               <Route path="analytics" element={<GovernmentWardAnalytics />} />
                               <Route path="resources" element={<GovernmentResources />} />
@@ -181,6 +185,7 @@ export const App: React.FC = () => {
                       </Suspense>
                     </BrowserRouter>
                   </AIProvider>
+                  </EmergencyProvider>
                 </GovernmentProvider>
               </CitizenProvider>
             </MapProvider>

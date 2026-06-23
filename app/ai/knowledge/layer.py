@@ -33,6 +33,30 @@ class KnowledgeBase:
                 title="Streetlight Faults",
                 content="Municipal electricity department resolves streetlight complaints within 48 business hours. Ensure accurate coordinates are attached.",
                 category="FAQ"
+            ),
+            Document(
+                doc_id="sop_fire",
+                title="Fire Rescue and Evacuation SOP",
+                content="In case of a fire emergency, immediately sound the alarm, evacuate using fire exits (stairs only, do not use lifts), and gather at the external assembly point. Contact fire rescue at 101.",
+                category="SOP"
+            ),
+            Document(
+                doc_id="sop_gas_leak",
+                title="Municipal Gas Leak Emergency SOP",
+                content="For gas leaks, immediately close the primary gas control valve, open all doors and windows, refrain from turning light switches or ignition sources on or off, evacuate the building, and contact the emergency response team at 108.",
+                category="SOP"
+            ),
+            Document(
+                doc_id="sop_earthquake",
+                title="Seismic Hazard Preparedness Protocol",
+                content="During earthquakes, Drop, Cover, and Hold on under heavy furniture. Stay away from glass panels, windows, and heavy bookcases. Once the shaking stops, evacuate to the designated open safe zones.",
+                category="SOP"
+            ),
+            Document(
+                doc_id="sop_water_contamination",
+                title="Water Quality Contamination Advisory",
+                content="If water supply contamination is reported, avoid drinking tap water directly. Boil tap water for a minimum of 15 minutes or filter using municipal emergency guidelines. Clean water tankers will be sent to the affected wards.",
+                category="SOP"
             )
         ]
 

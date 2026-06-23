@@ -10,4 +10,6 @@ from app.models.status_history import StatusHistory
 from app.models.issue_comment import IssueComment
 from app.models.gis import Ward, AdminBoundary
 from app.models.ai import AIConversation, AIMessage
+from app.models.emergency import EmergencyIncident, EmergencyTimelineEvent, EmergencyResource
+
 

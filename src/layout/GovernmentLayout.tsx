@@ -37,6 +37,7 @@ export const GovernmentLayout: React.FC = () => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard/government', icon: LayoutDashboard },
+    { name: 'Emergency Command', path: '/dashboard/government/emergency', icon: AlertTriangle },
     { name: 'Issue Management', path: '/dashboard/government/issues', icon: FileText },
     { name: 'Interactive Map', path: '/dashboard/government/map', icon: Map },
     { name: 'AI Console', path: '/dashboard/government/ai-console', icon: Cpu },
