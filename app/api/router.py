@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api import auth, user, citizen, government, issues, map
+from app.api import auth, user, citizen, government, issues, map, ai
 
 api_router = APIRouter()
 
@@ -10,4 +10,5 @@ api_router.include_router(citizen.router)
 api_router.include_router(government.router)
 api_router.include_router(issues.router)
 api_router.include_router(map.router)
+api_router.include_router(ai.router)
 

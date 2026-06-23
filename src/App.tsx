@@ -63,6 +63,7 @@ const GovernmentCitizens = lazy(() => import('./pages/dashboards/GovernmentCitiz
 const GovernmentReports = lazy(() => import('./pages/dashboards/GovernmentReports'));
 const NgoDashboard = lazy(() => import('./pages/dashboards/NgoDashboard'));
 const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
+const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
 
 export const App: React.FC = () => {
   return (
@@ -140,6 +141,7 @@ export const App: React.FC = () => {
                               <Route index element={<GovernmentDashboard />} />
                               <Route path="map" element={<GisMapPage />} />
                               <Route path="issues" element={<GovernmentIssues />} />
+                              <Route path="ai-console" element={<AiConsolePage />} />
                               <Route path="departments" element={<GovernmentDepartments />} />
                               <Route path="analytics" element={<GovernmentWardAnalytics />} />
                               <Route path="resources" element={<GovernmentResources />} />
