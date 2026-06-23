@@ -6,7 +6,7 @@ import { useCitizen } from '../context/CitizenContext';
 import { 
   LayoutDashboard, PlusCircle, FileText, Rss, Bookmark, 
   BellRing, Award, Settings, HelpCircle, ChevronLeft, ChevronRight, 
-  Menu, X, Sun, Moon, Bell, Search, LogOut, Landmark, Map
+  Menu, X, Sun, Moon, Bell, Search, LogOut, Landmark, Map, Bot
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotificationItem } from '../components/dashboard/NotificationItem';
@@ -39,6 +39,7 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Dashboard', path: '/dashboard/citizen', icon: LayoutDashboard },
     { name: 'Report Issue', path: '/dashboard/citizen/report-issue', icon: PlusCircle },
     { name: 'Interactive Map', path: '/dashboard/citizen/map', icon: Map },
+    { name: 'AI Assistant', path: '/dashboard/citizen/assistant', icon: Bot },
     { name: 'My Reports', path: '/dashboard/citizen/reports', icon: FileText },
     { name: 'Community Feed', path: '/dashboard/citizen/feed', icon: Rss },
     { name: 'Saved Reports', path: '/dashboard/citizen/saved', icon: Bookmark },

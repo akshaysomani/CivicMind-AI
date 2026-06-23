@@ -85,6 +85,40 @@ export interface AIWorkflowResponse {
   };
 }
 
+export interface AIConversation {
+  id: number;
+  title: string;
+  category: string;
+  is_pinned: boolean;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+}
+
+export interface AIMessage {
+  id: number;
+  sender: 'user' | 'agent' | 'system';
+  text: string;
+  timestamp: string;
+  agent_name?: string;
+  category?: string;
+  confidence?: number;
+  tokens_used?: number;
+  is_safety_violation: boolean;
+  knowledge_sources?: any[];
+  feedback?: 'like' | 'dislike' | null;
+}
+
+export interface ConversationDetailResponse extends AIConversation {
+  messages: AIMessage[];
+}
+
+export interface MessageSendResponse {
+  conversation_id: number;
+  user_message: AIMessage;
+  agent_message: AIMessage;
+}
+
 class AIService {
   private getHeaders(token?: string | null): Record<string, string> {
     return {
@@ -146,6 +180,82 @@ class AIService {
       body: JSON.stringify({ query, session_id: sessionId }),
     });
     if (!res.ok) throw new Error('Workflow execution failed.');
+    return res.json();
+  }
+
+  // Persistent Multi-Turn Client Helpers
+  public async createConversation(title: string, token: string | null): Promise<AIConversation> {
+    const res = await fetch(`${API_BASE}/ai/conversation`, {
+      method: 'POST',
+      headers: this.getHeaders(token),
+      body: JSON.stringify({ title }),
+    });
+    if (!res.ok) throw new Error('Failed to initialize a new conversation.');
+    return res.json();
+  }
+
+  public async getHistory(token: string | null): Promise<AIConversation[]> {
+    const res = await fetch(`${API_BASE}/ai/history`, {
+      method: 'GET',
+      headers: this.getHeaders(token),
+    });
+    if (!res.ok) throw new Error('Failed to load conversation logs history.');
+    return res.json();
+  }
+
+  public async getConversationDetails(id: number, token: string | null): Promise<ConversationDetailResponse> {
+    const res = await fetch(`${API_BASE}/ai/conversation/${id}`, {
+      method: 'GET',
+      headers: this.getHeaders(token),
+    });
+    if (!res.ok) throw new Error('Failed to load chat details.');
+    return res.json();
+  }
+
+  public async sendMessage(conversationId: number, text: string, token: string | null): Promise<MessageSendResponse> {
+    const res = await fetch(`${API_BASE}/ai/message`, {
+      method: 'POST',
+      headers: this.getHeaders(token),
+      body: JSON.stringify({ conversation_id: conversationId, text }),
+    });
+    if (!res.ok) throw new Error('Failed to transmit message payload.');
+    return res.json();
+  }
+
+  public async togglePinConversation(id: number, token: string | null): Promise<{ id: number; is_pinned: boolean }> {
+    const res = await fetch(`${API_BASE}/ai/conversation/${id}/pin`, {
+      method: 'POST',
+      headers: this.getHeaders(token),
+    });
+    if (!res.ok) throw new Error('Failed to pin active thread.');
+    return res.json();
+  }
+
+  public async deleteConversation(id: number, token: string | null): Promise<{ status: string; id: number }> {
+    const res = await fetch(`${API_BASE}/ai/conversation/${id}`, {
+      method: 'DELETE',
+      headers: this.getHeaders(token),
+    });
+    if (!res.ok) throw new Error('Failed to delete thread record.');
+    return res.json();
+  }
+
+  public async submitFeedback(messageId: number, feedback: 'like' | 'dislike', token: string | null): Promise<{ message_id: number; feedback: string }> {
+    const res = await fetch(`${API_BASE}/ai/feedback`, {
+      method: 'POST',
+      headers: this.getHeaders(token),
+      body: JSON.stringify({ message_id: messageId, feedback }),
+    });
+    if (!res.ok) throw new Error('Failed to post message feedback.');
+    return res.json();
+  }
+
+  public async getSuggestions(token: string | null): Promise<string[]> {
+    const res = await fetch(`${API_BASE}/ai/suggestions`, {
+      method: 'GET',
+      headers: this.getHeaders(token),
+    });
+    if (!res.ok) throw new Error('Failed to query dynamic suggestion query lists.');
     return res.json();
   }
 }

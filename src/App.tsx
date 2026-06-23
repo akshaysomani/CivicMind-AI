@@ -64,6 +64,7 @@ const GovernmentReports = lazy(() => import('./pages/dashboards/GovernmentReport
 const NgoDashboard = lazy(() => import('./pages/dashboards/NgoDashboard'));
 const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
+const AiAssistantPage = lazy(() => import('./pages/dashboards/AiAssistantPage'));
 
 export const App: React.FC = () => {
   return (
@@ -124,6 +125,7 @@ export const App: React.FC = () => {
                               <Route path="feed" element={<CommunityFeed />} />
                               <Route path="saved" element={<SavedReports />} />
                               <Route path="alerts" element={<NearbyAlerts />} />
+                              <Route path="assistant" element={<AiAssistantPage />} />
                               <Route path="achievements" element={<AchievementsPage />} />
                               <Route path="settings" element={<AccountSettings />} />
                               <Route path="help" element={<HelpCenterPlaceholder />} />

@@ -1,4 +1,5 @@
 import time
+import httpx
 from typing import Dict, Any, List, Optional
 from app.ai.config.settings import settings
 from app.ai.prompts.manager import prompt_manager
@@ -13,6 +14,39 @@ from app.ai.registry.core import agent_registry
 from app.ai.tools.registry import tool_registry
 
 class AIOrchestrator:
+    async def call_gemini_api(self, prompt: str, system_instruction: Optional[str] = None) -> str:
+        """
+        Executes a direct raw HTTP POST request to the Google Gen AI API (Gemini 2.5 Flash).
+        """
+        key = settings.GEMINI_API_KEY
+        if not key or key == "mock-gemini-key-for-development":
+            raise ValueError("No valid Gemini API key configured.")
+
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.PRIMARY_MODEL}:generateContent?key={key}"
+        
+        contents = [{"parts": [{"text": prompt}]}]
+        payload = {
+            "contents": contents,
+            "generationConfig": {
+                "temperature": settings.DEFAULT_TEMPERATURE,
+                "maxOutputTokens": settings.MAX_OUTPUT_TOKENS
+            }
+        }
+        if system_instruction:
+            payload["systemInstruction"] = {
+                "parts": [{"text": system_instruction}]
+            }
+
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(url, json=payload)
+            response.raise_for_status()
+            data = response.json()
+            
+            candidates = data.get("candidates", [])
+            if candidates:
+                return candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "").strip()
+            return ""
+
     async def chat(self, session_id: str, query: str, user_role: str = "Citizen") -> Dict[str, Any]:
         start_time = time.time()
         
@@ -46,7 +80,7 @@ class AIOrchestrator:
         session.add_message("user", clean_query)
 
         # 3. Intent Classification
-        category = self._classify_intent(clean_query)
+        category = await self._classify_intent(clean_query)
 
         # 4. Map intent to Agent
         agent_name = self._map_category_to_agent(category)
@@ -65,12 +99,33 @@ class AIOrchestrator:
         agent_output = ""
         confidence = 0.90
         try:
-            if agent:
-                res = await agent.execute(clean_query, context)
-                agent_output = res.get("output", "")
-                confidence = res.get("confidence", 0.90)
+            # Check if we should call actual Gemini for Citizen Assistant
+            if agent_name == "CitizenAssistant" and settings.GEMINI_API_KEY and settings.GEMINI_API_KEY != "mock-gemini-key-for-development":
+                try:
+                    # Construct prompt with RAG knowledge & history context
+                    knowledge_str = "\n".join([f"- {doc['title']}: {doc['content']}" for doc in knowledge_matches])
+                    history_str = "\n".join([f"{msg['role']}: {msg['content']}" for msg in context["history"][-5:]])
+                    
+                    sys_prompt = prompt_manager.get_prompt("citizen_assistant", query=clean_query)
+                    full_prompt = (
+                        f"Context History:\n{history_str}\n\n"
+                        f"Retrieved Reference Materials:\n{knowledge_str}\n\n"
+                        f"Citizen Query: {clean_query}\n"
+                    )
+                    agent_output = await self.call_gemini_api(full_prompt, system_instruction=sys_prompt)
+                    confidence = 0.96
+                except Exception:
+                    # Fallback to mock agent on failure
+                    res = await agent.execute(clean_query, context)
+                    agent_output = res.get("output", "")
+                    confidence = res.get("confidence", 0.90)
             else:
-                agent_output = f"I am unable to route this request to a handler. Category: {category}"
+                if agent:
+                    res = await agent.execute(clean_query, context)
+                    agent_output = res.get("output", "")
+                    confidence = res.get("confidence", 0.90)
+                else:
+                    agent_output = f"I am unable to route this request to a handler. Category: {category}"
         except Exception as e:
             agent_output = f"Error executing agent: {str(e)}"
             confidence = 0.0
@@ -98,10 +153,24 @@ class AIOrchestrator:
             "safety": {"safe": True, "reason": "Safe"},
             "session_id": session_id,
             "duration_ms": duration,
-            "knowledge_sources": knowledge_matches
+            "knowledge_sources": knowledge_matches,
+            "confidence": confidence
         }
 
-    def _classify_intent(self, query: str) -> str:
+    async def _classify_intent(self, query: str) -> str:
+        # Check if we can make a live Gemini call for intent classification
+        if settings.GEMINI_API_KEY and settings.GEMINI_API_KEY != "mock-gemini-key-for-development":
+            try:
+                prompt = prompt_manager.get_prompt("intent_classification", query=query)
+                res = await self.call_gemini_api(prompt)
+                valid_categories = ["Community Issue", "Emergency", "Government Scheme", "Healthcare", "Environment", "Citizen Query", "Analytics", "General Conversation"]
+                for cat in valid_categories:
+                    if cat.lower() in res.lower():
+                        return cat
+            except Exception:
+                pass
+
+        # Rule-based fallback classification
         query_lower = query.lower()
         if any(k in query_lower for k in ["emergency", "hazard", "fire", "accident", "flood", "evacuate"]):
             return "Emergency"
