@@ -1,4 +1,4 @@
-
+# CivicMind AI
 
 > **AI-Powered Community Decision Intelligence Platform**
 
