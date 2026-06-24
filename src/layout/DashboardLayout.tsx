@@ -6,7 +6,7 @@ import { useCitizen } from '../context/CitizenContext';
 import { 
   LayoutDashboard, PlusCircle, FileText, Rss, Bookmark, 
   BellRing, Award, Settings, HelpCircle, ChevronLeft, ChevronRight, 
-  Menu, X, Sun, Moon, Bell, Search, LogOut, Landmark, Map, Bot
+  Menu, X, Sun, Moon, Bell, Search, LogOut, Landmark, Map, Bot, Heart, TrendingUp, Compass, GitBranch, BarChart3
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NotificationItem } from '../components/dashboard/NotificationItem';
@@ -40,10 +40,18 @@ export const DashboardLayout: React.FC = () => {
     { name: 'Report Issue', path: '/dashboard/citizen/report-issue', icon: PlusCircle },
     { name: 'Interactive Map', path: '/dashboard/citizen/map', icon: Map },
     { name: 'AI Assistant', path: '/dashboard/citizen/assistant', icon: Bot },
+    { name: 'Healthcare Intelligence', path: '/dashboard/citizen/healthcare', icon: Heart },
+    { name: 'Government Schemes', path: '/dashboard/citizen/schemes', icon: Landmark },
+    { name: 'Decision Analytics', path: '/dashboard/citizen/analytics', icon: TrendingUp },
+    { name: 'Predictive Engine', path: '/dashboard/citizen/forecast', icon: Compass },
+    { name: 'Executive Dashboard', path: '/dashboard/citizen/executive-dashboard', icon: BarChart3 },
+    { name: 'Report Builder', path: '/dashboard/citizen/report-builder', icon: FileText },
     { name: 'My Reports', path: '/dashboard/citizen/reports', icon: FileText },
     { name: 'Community Feed', path: '/dashboard/citizen/feed', icon: Rss },
     { name: 'Saved Reports', path: '/dashboard/citizen/saved', icon: Bookmark },
     { name: 'Nearby Alerts', path: '/dashboard/citizen/alerts', icon: BellRing },
+    { name: 'Inbox Alerts', path: '/dashboard/citizen/notifications', icon: Bell },
+    { name: 'Workflow Builder', path: '/dashboard/citizen/workflows', icon: GitBranch },
     { name: 'Achievements', path: '/dashboard/citizen/achievements', icon: Award },
     { name: 'Settings', path: '/dashboard/citizen/settings', icon: Settings },
     { name: 'Help Center', path: '/dashboard/citizen/help', icon: HelpCircle },

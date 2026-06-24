@@ -174,6 +174,8 @@ class AIOrchestrator:
         query_lower = query.lower()
         if any(k in query_lower for k in ["emergency", "hazard", "fire", "accident", "flood", "evacuate"]):
             return "Emergency"
+        elif any(k in query_lower for k in ["hospital", "clinic", "pharmacy", "health", "vaccine", "doctor", "blood bank", "first aid", "medicine", "medical", "patient", "disease"]):
+            return "Healthcare"
         elif any(k in query_lower for k in ["faq", "help", "how to", "status", "complaint", "issue", "officer", "ward", "citizen"]):
             return "Citizen Query"
         elif any(k in query_lower for k in ["scheme", "welfare", "grant", "subsidy", "apply"]):
@@ -189,8 +191,9 @@ class AIOrchestrator:
     def _map_category_to_agent(self, category: str) -> str:
         mapping = {
             "Emergency": "EmergencyAdvisor",
+            "Healthcare": "HealthcareAdvisor",
             "Citizen Query": "CitizenAssistant",
-            "Government Scheme": "SchemePlanner",
+            "Government Scheme": "SchemeAdvisor",
             "Environment": "EnvironmentalInspector",
             "Analytics": "AnalyticsInsight",
             "General Conversation": "GeneralConversational"

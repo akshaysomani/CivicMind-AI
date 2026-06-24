@@ -5,9 +5,14 @@ from app.ai.agents.placeholders import (
     EmergencyAdvisorAgent,
     SchemePlannerAgent,
     EnvironmentalInspectorAgent,
-    AnalyticsInsightAgent,
     GeneralConversationalAgent
 )
+from app.ai.agents.health import HealthcareAdvisorAgent
+from app.ai.agents.schemes import SchemeAdvisorAgent
+from app.ai.agents.analytics import AnalyticsInsightAgent
+from app.ai.agents.forecasting import ForecastingAgent
+from app.ai.agents.reporting import ExecutiveReportingAgent
+
 
 class AgentRegistry:
     def __init__(self):
@@ -35,3 +40,8 @@ agent_registry.register_agent(SchemePlannerAgent())
 agent_registry.register_agent(EnvironmentalInspectorAgent())
 agent_registry.register_agent(AnalyticsInsightAgent())
 agent_registry.register_agent(GeneralConversationalAgent())
+agent_registry.register_agent(HealthcareAdvisorAgent())
+agent_registry.register_agent(SchemeAdvisorAgent())
+agent_registry.register_agent(ForecastingAgent())
+agent_registry.register_agent(ExecutiveReportingAgent())
+

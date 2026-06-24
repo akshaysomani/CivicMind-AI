@@ -12,6 +12,14 @@ import { GovernmentProvider } from './context/GovernmentContext';
 import { EmergencyProvider } from './context/EmergencyContext';
 import { IssueProvider } from './context/IssueContext';
 import { MapProvider } from './context/MapContext';
+import { HealthcareProvider } from './context/HealthcareContext';
+import { SchemeProvider } from './context/SchemeContext';
+import { AnalyticsProvider } from './context/AnalyticsContext';
+import { ForecastProvider } from './context/ForecastContext';
+import { NotificationCenterProvider } from './context/NotificationCenterContext';
+import { ReportingProvider } from './context/ReportingContext';
+
+
 
 
 // Layout & Route Guard
@@ -67,6 +75,19 @@ const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
 const AiAssistantPage = lazy(() => import('./pages/dashboards/AiAssistantPage'));
 const EmergencyDashboardPage = lazy(() => import('./pages/dashboards/EmergencyDashboardPage'));
+const HealthcarePage = lazy(() => import('./pages/dashboards/HealthcarePage'));
+const SchemesPage = lazy(() => import('./pages/dashboards/SchemesPage'));
+const AnalyticsDashboardPage = lazy(() => import('./pages/dashboards/AnalyticsDashboardPage').then(m => ({ default: m.AnalyticsDashboardPage })));
+const ForecastPage = lazy(() => import('./pages/dashboards/ForecastPage').then(m => ({ default: m.ForecastPage })));
+const NotificationCenterPage = lazy(() => import('./pages/dashboards/NotificationCenterPage'));
+const WorkflowBuilderPage = lazy(() => import('./pages/dashboards/WorkflowBuilderPage'));
+const ExecutiveDashboardPage = lazy(() => import('./pages/dashboards/ExecutiveDashboardPage'));
+const ReportBuilderPage = lazy(() => import('./pages/dashboards/ReportBuilderPage'));
+const DecisionBriefingsPage = lazy(() => import('./pages/dashboards/DecisionBriefingsPage'));
+const ScheduledReportsPage = lazy(() => import('./pages/dashboards/ScheduledReportsPage'));
+const ReportViewerPage = lazy(() => import('./pages/dashboards/ReportViewerPage'));
+
+
 
 export const App: React.FC = () => {
   return (
@@ -74,11 +95,17 @@ export const App: React.FC = () => {
       <AppProvider>
         <NotificationProvider>
           <AuthProvider>
-            <IssueProvider>
+            <NotificationCenterProvider>
+              <ReportingProvider>
+                <IssueProvider>
               <MapProvider>
                 <CitizenProvider>
                   <GovernmentProvider>
                   <EmergencyProvider>
+                  <HealthcareProvider>
+                  <SchemeProvider>
+                  <AnalyticsProvider>
+                  <ForecastProvider>
                   <AIProvider>
                     <BrowserRouter>
                       <Suspense
@@ -129,7 +156,18 @@ export const App: React.FC = () => {
                               <Route path="saved" element={<SavedReports />} />
                               <Route path="alerts" element={<NearbyAlerts />} />
                               <Route path="assistant" element={<AiAssistantPage />} />
+                              <Route path="healthcare" element={<HealthcarePage />} />
+                              <Route path="schemes" element={<SchemesPage />} />
+                              <Route path="analytics" element={<AnalyticsDashboardPage />} />
+                              <Route path="forecast" element={<ForecastPage />} />
                               <Route path="achievements" element={<AchievementsPage />} />
+                              <Route path="notifications" element={<NotificationCenterPage />} />
+                              <Route path="workflows" element={<WorkflowBuilderPage />} />
+                              <Route path="executive-dashboard" element={<ExecutiveDashboardPage />} />
+                              <Route path="report-builder" element={<ReportBuilderPage />} />
+                              <Route path="decision-briefings" element={<DecisionBriefingsPage />} />
+                              <Route path="scheduled-reports" element={<ScheduledReportsPage />} />
+                              <Route path="report-viewer/:id" element={<ReportViewerPage />} />
                               <Route path="settings" element={<AccountSettings />} />
                               <Route path="help" element={<HelpCenterPlaceholder />} />
                             </Route>
@@ -154,6 +192,13 @@ export const App: React.FC = () => {
                               <Route path="announcements" element={<GovernmentAnnouncements />} />
                               <Route path="citizens" element={<GovernmentCitizens />} />
                               <Route path="reports" element={<GovernmentReports />} />
+                              <Route path="notifications" element={<NotificationCenterPage />} />
+                              <Route path="workflows" element={<WorkflowBuilderPage />} />
+                              <Route path="executive-dashboard" element={<ExecutiveDashboardPage />} />
+                              <Route path="report-builder" element={<ReportBuilderPage />} />
+                              <Route path="decision-briefings" element={<DecisionBriefingsPage />} />
+                              <Route path="scheduled-reports" element={<ScheduledReportsPage />} />
+                              <Route path="report-viewer/:id" element={<ReportViewerPage />} />
                               <Route path="settings" element={<AccountSettings />} />
                               <Route path="help" element={<HelpCenterPlaceholder />} />
                             </Route>
@@ -185,11 +230,17 @@ export const App: React.FC = () => {
                       </Suspense>
                     </BrowserRouter>
                   </AIProvider>
+                  </ForecastProvider>
+                  </AnalyticsProvider>
+                  </SchemeProvider>
+                  </HealthcareProvider>
                   </EmergencyProvider>
                 </GovernmentProvider>
               </CitizenProvider>
             </MapProvider>
           </IssueProvider>
+          </ReportingProvider>
+          </NotificationCenterProvider>
           </AuthProvider>
         </NotificationProvider>
       </AppProvider>

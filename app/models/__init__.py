@@ -11,5 +11,10 @@ from app.models.issue_comment import IssueComment
 from app.models.gis import Ward, AdminBoundary
 from app.models.ai import AIConversation, AIMessage
 from app.models.emergency import EmergencyIncident, EmergencyTimelineEvent, EmergencyResource
+from app.models.scheme import SavedScheme
+from app.models.workflow import NotificationPreference, WorkflowRule, WorkflowHistory
+from app.models.reporting import ExecutiveReport, Briefing, ScheduledReport
+
+
 
 

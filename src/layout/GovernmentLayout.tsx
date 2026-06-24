@@ -7,7 +7,7 @@ import {
   LayoutDashboard, FileText, Landmark, Rss, Settings, 
   HelpCircle, ChevronLeft, ChevronRight, Menu, X, Sun, Moon, 
   Bell, Search, LogOut, ShieldCheck, Users, BarChart3, 
-  Building2, AlertTriangle, CheckCircle, Activity, Archive, Map, Cpu
+  Building2, AlertTriangle, CheckCircle, Activity, Archive, Map, Cpu, GitBranch
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -41,12 +41,16 @@ export const GovernmentLayout: React.FC = () => {
     { name: 'Issue Management', path: '/dashboard/government/issues', icon: FileText },
     { name: 'Interactive Map', path: '/dashboard/government/map', icon: Map },
     { name: 'AI Console', path: '/dashboard/government/ai-console', icon: Cpu },
+    { name: 'Executive Dashboard', path: '/dashboard/government/executive-dashboard', icon: BarChart3 },
+    { name: 'Report Builder', path: '/dashboard/government/report-builder', icon: FileText },
     { name: 'Departments', path: '/dashboard/government/departments', icon: Building2 },
     { name: 'Ward Analytics', path: '/dashboard/government/analytics', icon: BarChart3 },
     { name: 'Reports', path: '/dashboard/government/reports', icon: Archive },
     { name: 'Announcements', path: '/dashboard/government/announcements', icon: Rss },
     { name: 'Citizens', path: '/dashboard/government/citizens', icon: Users },
     { name: 'Resources', path: '/dashboard/government/resources', icon: ShieldCheck },
+    { name: 'Inbox Alerts', path: '/dashboard/government/notifications', icon: Bell },
+    { name: 'Workflow Builder', path: '/dashboard/government/workflows', icon: GitBranch },
     { name: 'Settings', path: '/dashboard/government/settings', icon: Settings },
     { name: 'Help Center', path: '/dashboard/government/help', icon: HelpCircle },
   ];
