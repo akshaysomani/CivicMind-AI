@@ -18,6 +18,7 @@ import { AnalyticsProvider } from './context/AnalyticsContext';
 import { ForecastProvider } from './context/ForecastContext';
 import { NotificationCenterProvider } from './context/NotificationCenterContext';
 import { ReportingProvider } from './context/ReportingContext';
+import { AdminProvider } from './context/AdminContext';
 
 
 
@@ -71,7 +72,22 @@ const GovernmentAnnouncements = lazy(() => import('./pages/dashboards/Government
 const GovernmentCitizens = lazy(() => import('./pages/dashboards/GovernmentCitizens'));
 const GovernmentReports = lazy(() => import('./pages/dashboards/GovernmentReports'));
 const NgoDashboard = lazy(() => import('./pages/dashboards/NgoDashboard'));
-const AdminDashboard = lazy(() => import('./pages/dashboards/AdminDashboard'));
+
+// Admin Dashboard Pages
+const AdminLayout = lazy(() => import('./layout/AdminLayout'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
+const UserManagementPage = lazy(() => import('./pages/admin/UserManagementPage'));
+const RoleManagementPage = lazy(() => import('./pages/admin/RoleManagementPage'));
+const PermissionManagementPage = lazy(() => import('./pages/admin/PermissionManagementPage'));
+const AiOperationsPage = lazy(() => import('./pages/admin/AiOperationsPage'));
+const DepartmentManagementPage = lazy(() => import('./pages/admin/DepartmentManagementPage'));
+const KnowledgeManagementPage = lazy(() => import('./pages/admin/KnowledgeManagementPage'));
+const ApiConsolePage = lazy(() => import('./pages/admin/ApiConsolePage'));
+const MonitoringPage = lazy(() => import('./pages/admin/MonitoringPage'));
+const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
+const SecurityCenterPage = lazy(() => import('./pages/admin/SecurityCenterPage'));
+const SystemSettingsPage = lazy(() => import('./pages/admin/SystemSettingsPage'));
+
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
 const AiAssistantPage = lazy(() => import('./pages/dashboards/AiAssistantPage'));
 const EmergencyDashboardPage = lazy(() => import('./pages/dashboards/EmergencyDashboardPage'));
@@ -107,6 +123,7 @@ export const App: React.FC = () => {
                   <AnalyticsProvider>
                   <ForecastProvider>
                   <AIProvider>
+                    <AdminProvider>
                     <BrowserRouter>
                       <Suspense
                         fallback={
@@ -217,11 +234,24 @@ export const App: React.FC = () => {
                             <Route
                               path="/dashboard/admin"
                               element={
-                                <Protected allowedRoles={['Admin']}>
-                                  <AdminDashboard />
+                                <Protected allowedRoles={['Admin', 'Super Administrator']}>
+                                  <AdminLayout />
                                 </Protected>
                               }
-                            />
+                            >
+                              <Route index element={<AdminDashboardPage />} />
+                              <Route path="users" element={<UserManagementPage />} />
+                              <Route path="roles" element={<RoleManagementPage />} />
+                              <Route path="permissions" element={<PermissionManagementPage />} />
+                              <Route path="agents" element={<AiOperationsPage />} />
+                              <Route path="departments" element={<DepartmentManagementPage />} />
+                              <Route path="knowledge" element={<KnowledgeManagementPage />} />
+                              <Route path="api" element={<ApiConsolePage />} />
+                              <Route path="monitoring" element={<MonitoringPage />} />
+                              <Route path="audit" element={<AuditLogsPage />} />
+                              <Route path="security" element={<SecurityCenterPage />} />
+                              <Route path="settings" element={<SystemSettingsPage />} />
+                            </Route>
 
                             {/* Wildcard 404 */}
                             <Route path="*" element={<NotFound />} />
@@ -229,6 +259,7 @@ export const App: React.FC = () => {
                         </Routes>
                       </Suspense>
                     </BrowserRouter>
+                    </AdminProvider>
                   </AIProvider>
                   </ForecastProvider>
                   </AnalyticsProvider>
