@@ -20,6 +20,8 @@ import { NotificationCenterProvider } from './context/NotificationCenterContext'
 import { ReportingProvider } from './context/ReportingContext';
 import { AdminProvider } from './context/AdminContext';
 import { QAProvider } from './context/QAContext';
+import { PresentationProvider } from './context/PresentationContext';
+import { PresentationTour } from './components/PresentationTour';
 
 
 
@@ -129,9 +131,11 @@ export const App: React.FC = () => {
                   <ForecastProvider>
                   <AIProvider>
                     <AdminProvider>
-                    <QAProvider>
-                    <BrowserRouter>
-                      <Suspense
+                     <QAProvider>
+                     <BrowserRouter>
+                       <PresentationProvider>
+                         <PresentationTour />
+                         <Suspense
                         fallback={
                           <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
                             <LoadingSpinner size="lg" text="Loading CivicMind Workspace..." />
@@ -267,9 +271,10 @@ export const App: React.FC = () => {
                             <Route path="*" element={<NotFound />} />
                           </Route>
                         </Routes>
-                      </Suspense>
-                    </BrowserRouter>
-                    </QAProvider>
+                       </Suspense>
+                     </PresentationProvider>
+                     </BrowserRouter>
+                     </QAProvider>
                     </AdminProvider>
                   </AIProvider>
                   </ForecastProvider>

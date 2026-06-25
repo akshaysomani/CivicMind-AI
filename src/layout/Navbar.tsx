@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-import { Sun, Moon, Menu, X, Landmark, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { usePresentation } from '../context/PresentationContext';
+import { Sun, Moon, Menu, X, Landmark, User, LogOut, LayoutDashboard, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/Button';
 
 export const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { currentUser, isAuthenticated, logout } = useAuth();
+  const { startTour } = usePresentation();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -85,6 +87,15 @@ export const Navbar: React.FC = () => {
 
         {/* Action Controls */}
         <div className="hidden md:flex items-center gap-4">
+          {/* Hackathon Guided Tour */}
+          <button
+            onClick={startTour}
+            className="flex items-center gap-1.5 px-4.5 py-2.5 rounded-xl border border-indigo-500/35 bg-indigo-500/10 hover:bg-indigo-500/25 text-indigo-400 hover:text-indigo-300 text-sm font-semibold transition-all cursor-pointer shadow-sm shadow-indigo-500/5"
+          >
+            <Sparkles className="w-4 h-4 animate-pulse" />
+            Guided Tour
+          </button>
+
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}

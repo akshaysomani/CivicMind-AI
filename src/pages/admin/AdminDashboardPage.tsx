@@ -1,12 +1,14 @@
 import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
+import { usePresentation } from '../../context/PresentationContext';
 import { AdminKPICard } from '../../components/admin/AdminKPICard';
 import { SystemHealthWidget } from '../../components/admin/SystemHealthWidget';
 import { AgentCard } from '../../components/admin/AgentCard';
-import { Users, Bot, ShieldAlert, Activity, FileText } from 'lucide-react';
+import { Users, Bot, ShieldAlert, Activity, FileText, Sparkles } from 'lucide-react';
 
 export const AdminDashboardPage: React.FC = () => {
   const { systemHealth, users, agents, auditLogs, loading } = useAdmin();
+  const { isDemoMode, toggleDemoMode, startTour } = usePresentation();
 
   if (loading || !systemHealth) {
     return (
@@ -21,7 +23,36 @@ export const AdminDashboardPage: React.FC = () => {
   const errorLogs = auditLogs.filter(l => l.status === 'Failed').length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
+      {/* 0. Demo Mode Active Alert Banner */}
+      {isDemoMode && (
+        <div className="bg-gradient-to-r from-indigo-950/70 to-purple-950/70 backdrop-blur-md border border-indigo-500/30 rounded-2xl p-4.5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-indigo-500/5 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div className="text-left">
+              <h4 className="text-sm font-extrabold text-white">Hackathon Presentation & Demo Mode Active</h4>
+              <p className="text-2xs text-slate-400 font-semibold mt-0.5">Showing simulated telemetry data for presentation purposes.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <button 
+              onClick={startTour}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/30"
+            >
+              Launch Guided Tour
+            </button>
+            <button 
+              onClick={toggleDemoMode}
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-305 text-xs font-bold rounded-xl border border-slate-800 transition-all cursor-pointer"
+            >
+              Exit Demo Mode
+            </button>
+          </div>
+        </div>
+      )}
+
       <div>
         <h1 className="text-2xl font-bold text-white">Enterprise Admin Dashboard</h1>
         <p className="text-slate-400">Platform operational status and overview.</p>

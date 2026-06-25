@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useCitizen } from '../../context/CitizenContext';
+import { usePresentation } from '../../context/PresentationContext';
 import { DashboardCard } from '../../components/dashboard/DashboardCard';
 import { QuickActionCard } from '../../components/dashboard/QuickActionCard';
 import { AchievementBadge } from '../../components/dashboard/AchievementBadge';
@@ -16,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 export const CitizenDashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const { stats, insights, achievements, notifications, isLoading, refreshDashboard } = useCitizen();
+  const { isDemoMode, toggleDemoMode, startTour } = usePresentation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -72,6 +74,35 @@ export const CitizenDashboard: React.FC = () => {
   return (
     <div className="space-y-8 pb-10">
       
+      {/* 0. Demo Mode Active Alert Banner */}
+      {isDemoMode && (
+        <div className="bg-gradient-to-r from-indigo-950/70 to-purple-950/70 backdrop-blur-md border border-indigo-500/30 rounded-2xl p-4.5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-indigo-500/5">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-400">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div className="text-left">
+              <h4 className="text-sm font-extrabold text-white">Hackathon Presentation & Demo Mode Active</h4>
+              <p className="text-2xs text-slate-400 font-semibold mt-0.5">Showing simulated telemetry data for presentation purposes.</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <button 
+              onClick={startTour}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all cursor-pointer shadow-md shadow-indigo-600/15 hover:shadow-indigo-600/30"
+            >
+              Launch Guided Tour
+            </button>
+            <button 
+              onClick={toggleDemoMode}
+              className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-bold rounded-xl border border-slate-800 transition-all cursor-pointer"
+            >
+              Exit Demo Mode
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 1. Welcome Header Block */}
       <div className="bg-slate-900/30 dark:bg-slate-900/30 light:bg-white/40 border border-white/10 dark:border-white/5 light:border-slate-200/80 rounded-3xl p-6 md:p-8 backdrop-blur-md shadow-sm relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
         
@@ -125,7 +156,14 @@ export const CitizenDashboard: React.FC = () => {
         {/* Reported count */}
         <DashboardCard className="p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Issues Reported</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Issues Reported</span>
+              {isDemoMode && (
+                <span className="bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 text-[8px] font-bold rounded border border-indigo-500/20 lowercase tracking-normal">
+                  demo
+                </span>
+              )}
+            </div>
             <div className="p-2.5 bg-primary/10 border border-primary/20 text-primary rounded-xl shrink-0">
               <FileText className="w-5 h-5" />
             </div>
@@ -144,7 +182,14 @@ export const CitizenDashboard: React.FC = () => {
         {/* Resolved count */}
         <DashboardCard className="p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Resolved Issues</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Resolved Issues</span>
+              {isDemoMode && (
+                <span className="bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 text-[8px] font-bold rounded border border-indigo-500/20 lowercase tracking-normal">
+                  demo
+                </span>
+              )}
+            </div>
             <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-xl shrink-0">
               <CheckCircle className="w-5 h-5" />
             </div>
@@ -165,7 +210,14 @@ export const CitizenDashboard: React.FC = () => {
         {/* Score count */}
         <DashboardCard className="p-6 flex flex-col justify-between">
           <div className="flex justify-between items-start">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Participation Score</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500">Participation Score</span>
+              {isDemoMode && (
+                <span className="bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 text-[8px] font-bold rounded border border-indigo-500/20 lowercase tracking-normal">
+                  demo
+                </span>
+              )}
+            </div>
             <div className="p-2.5 bg-accent/10 border border-accent/20 text-accent rounded-xl shrink-0">
               <Award className="w-5 h-5" />
             </div>

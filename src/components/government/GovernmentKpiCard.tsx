@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { AnimatedCounter } from '../AnimatedCounter';
+import { usePresentation } from '../../context/PresentationContext';
 
 interface GovernmentKpiCardProps {
   title: string;
@@ -30,6 +31,8 @@ export const GovernmentKpiCard: React.FC<GovernmentKpiCardProps> = ({
   colorClass = 'text-primary bg-primary/10 border-primary/20',
   sparklineData = [10, 15, 8, 12, 20, 15, 25]
 }) => {
+  const { isDemoMode } = usePresentation();
+
   // SVG Sparkline path generator
   const getSparklinePath = (data: number[]) => {
     const width = 100;
@@ -52,9 +55,16 @@ export const GovernmentKpiCard: React.FC<GovernmentKpiCardProps> = ({
     >
       <div className="flex justify-between items-start">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block">
-            {title}
-          </span>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block">
+              {title}
+            </span>
+            {isDemoMode && (
+              <span className="bg-indigo-500/10 text-indigo-400 px-1.5 py-0.5 text-[8px] font-bold rounded border border-indigo-500/20 lowercase tracking-normal">
+                demo
+              </span>
+            )}
+          </div>
           <h3 className="text-2xl font-extrabold font-heading text-slate-900 dark:text-slate-100 block">
             <AnimatedCounter value={value} prefix={prefix} suffix={suffix} />
           </h3>
