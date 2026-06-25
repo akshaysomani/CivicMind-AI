@@ -3,11 +3,13 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+import jwt
 
 from app.core.config import settings
 from app.core import security
 from app.database.session import get_db
 from app.models.user import User
+from app.api import deps
 from app.schemas.auth import (
     UserRegister,
     UserLogin,
@@ -16,7 +18,10 @@ from app.schemas.auth import (
     ForgotPasswordRequest,
     ResetPasswordRequest,
     VerifyEmailRequest,
-    MessageResponse
+    MessageResponse,
+    MFASetupResponse,
+    MFAEnableRequest,
+    MFAVerifyRequest
 )
 from app.schemas.user import UserResponse
 
@@ -37,6 +42,14 @@ async def register(user_in: UserRegister, db: AsyncSession = Depends(get_db)):
             detail="The user with this email address already exists in the system."
         )
     
+    # Enforce Password Complexity Rules
+    ok, err_msg = security.validate_password_strength(user_in.password)
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=err_msg
+        )
+        
     # Hash password and create user object
     hashed_password = security.get_password_hash(user_in.password)
     verification_token = str(uuid.uuid4())
@@ -62,7 +75,6 @@ async def register(user_in: UserRegister, db: AsyncSession = Depends(get_db)):
     await db.commit()
     await db.refresh(db_user)
     
-    # Return user details (verification token could be sent in email, logged here for mock use)
     print(f"[Verification Token Created] for {db_user.email}: {verification_token}")
     return db_user
 
@@ -104,18 +116,24 @@ async def login(response: Response, login_in: UserLogin, db: AsyncSession = Depe
             detail="Incorrect email address or password credentials."
         )
         
-    # Reset failed login count on successful login
+    # Reset failed login count on successful authentication
     db_user.failed_login_attempts = 0
     db_user.locked_until = None
     db_user.account_status = "active"
     db_user.last_login = datetime.now(timezone.utc).replace(tzinfo=None)
     await db.commit()
     
+    # If Multi-Factor Authentication is enabled, issue challenge first
+    if db_user.mfa_enabled:
+        return {
+            "mfa_required": True,
+            "user": db_user
+        }
+        
     # Generate token sets
     access_token = security.create_access_token(subject=db_user.id)
     refresh_token = security.create_refresh_token(subject=db_user.id)
     
-    # Optionally store refresh token in secure HTTP-only cookies
     response.set_cookie(
         key="refresh_token",
         value=refresh_token,
@@ -140,9 +158,25 @@ async def logout(response: Response):
 
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(refresh_in: RefreshTokenRequest, db: AsyncSession = Depends(get_db)):
-    """Generate a new access token via a valid refresh token validation."""
+    """Generate a new access token via a valid refresh token validation (with rotation)."""
     payload = security.verify_token(refresh_in.refresh_token)
+    
     if not payload or payload.get("type") != "refresh":
+        # Check if reuse of a blacklisted token occurred (hijack indicator)
+        if security.is_refresh_token_blacklisted(refresh_in.refresh_token):
+            # Invalidate all user sessions to secure the account
+            try:
+                user_id = int(jwt.decode(refresh_in.refresh_token, settings.SECRET_KEY, options={"verify_signature": False}).get("sub"))
+                deps.USER_JTI_MAP[user_id].clear()
+                for key in list(deps.ACTIVE_USER_SESSIONS.keys()):
+                    if key in deps.USER_JTI_MAP[user_id]:
+                        deps.ACTIVE_USER_SESSIONS.pop(key, None)
+            except Exception:
+                pass
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Refresh token reuse detected. Revoking all sessions for security."
+            )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired session refresh token."
@@ -158,7 +192,9 @@ async def refresh(refresh_in: RefreshTokenRequest, db: AsyncSession = Depends(ge
             detail="User account is inactive or suspended."
         )
         
-    # Generate new tokens
+    # Rotate token: invalidate the used refresh token
+    security.blacklist_refresh_token(refresh_in.refresh_token)
+    
     new_access_token = security.create_access_token(subject=db_user.id)
     new_refresh_token = security.create_refresh_token(subject=db_user.id)
     
@@ -176,7 +212,6 @@ async def forgot_password(forgot_in: ForgotPasswordRequest, db: AsyncSession = D
     db_user = result.scalars().first()
     
     if not db_user:
-        # Avoid user enumeration attacks: return success even if user not found
         return {"message": "If this email is registered, a password reset link has been generated."}
         
     reset_token = str(uuid.uuid4())
@@ -184,7 +219,6 @@ async def forgot_password(forgot_in: ForgotPasswordRequest, db: AsyncSession = D
     db_user.password_reset_expires = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=1)
     await db.commit()
     
-    # Logging token (replaces mock email routing in local dev)
     print(f"[Password Reset Token Created] for {db_user.email}: {reset_token}")
     return {
         "message": f"If this email is registered, a password reset link has been generated. Token for testing: {reset_token}"
@@ -207,10 +241,18 @@ async def reset_password(reset_in: ResetPasswordRequest, db: AsyncSession = Depe
             detail="Invalid or expired password reset token."
         )
         
+    # Enforce password strength rules
+    ok, err_msg = security.validate_password_strength(reset_in.new_password)
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=err_msg
+        )
+        
     db_user.password_hash = security.get_password_hash(reset_in.new_password)
     db_user.password_reset_token = None
     db_user.password_reset_expires = None
-    db_user.failed_login_attempts = 0 # reset lockout triggers
+    db_user.failed_login_attempts = 0
     db_user.locked_until = None
     await db.commit()
     
@@ -233,3 +275,85 @@ async def verify_email(verify_in: VerifyEmailRequest, db: AsyncSession = Depends
     await db.commit()
     
     return {"message": "Email address verified successfully. Welcome to CivicMind AI!"}
+
+# --- MFA Setup & Verification Routes ---
+
+@router.get("/mfa/setup", response_model=MFASetupResponse)
+async def mfa_setup(current_user: User = Depends(deps.get_current_user), db: AsyncSession = Depends(get_db)):
+    """Generate TOTP MFA secret and QR code URI."""
+    secret = security.generate_mfa_secret()
+    current_user.mfa_secret = secret
+    await db.commit()
+    
+    # Generate Google Authenticator compatible QR Code URI scheme
+    qr_uri = f"otpauth://totp/{settings.MFA_ISSUER}:{current_user.email}?secret={secret}&issuer={settings.MFA_ISSUER}"
+    return {
+        "secret": secret,
+        "qr_code_url": qr_uri
+    }
+
+@router.post("/mfa/enable", response_model=MessageResponse)
+async def mfa_enable(req: MFAEnableRequest, current_user: User = Depends(deps.get_current_user), db: AsyncSession = Depends(get_db)):
+    """Validate OTP code and activate Multi-Factor Authentication protection."""
+    if not current_user.mfa_secret:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="MFA secret not generated. Initiate setup first."
+        )
+        
+    if not security.verify_mfa_code(current_user.mfa_secret, req.code):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Verification failed. Invalid authentication code."
+        )
+        
+    current_user.mfa_enabled = True
+    await db.commit()
+    return {"message": "Multi-Factor Authentication enabled successfully."}
+
+@router.post("/mfa/verify", response_model=TokenResponse)
+async def mfa_verify(response: Response, req: MFAVerifyRequest, db: AsyncSession = Depends(get_db)):
+    """Complete login flow by validating TOTP code for MFA-enabled accounts."""
+    result = await db.execute(select(User).where(User.email == req.email))
+    db_user = result.scalars().first()
+    
+    if not db_user or not db_user.mfa_enabled or not db_user.mfa_secret:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="MFA is not enabled on this account."
+        )
+        
+    if not security.verify_mfa_code(db_user.mfa_secret, req.code):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid multi-factor authentication code."
+        )
+        
+    # Successful MFA login: Issue session tokens
+    access_token = security.create_access_token(subject=db_user.id)
+    refresh_token = security.create_refresh_token(subject=db_user.id)
+    
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 3600
+    )
+    
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer",
+        "user": db_user
+    }
+
+@router.post("/mfa/disable", response_model=MessageResponse)
+async def mfa_disable(current_user: User = Depends(deps.get_current_user), db: AsyncSession = Depends(get_db)):
+    """Deactivate Multi-Factor Authentication protection."""
+    current_user.mfa_enabled = False
+    current_user.mfa_secret = None
+    await db.commit()
+    return {"message": "Multi-Factor Authentication disabled successfully."}
+

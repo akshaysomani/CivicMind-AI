@@ -20,10 +20,12 @@ class UserLogin(BaseModel):
     password: str
 
 class TokenResponse(BaseModel):
-    access_token: str
-    refresh_token: str
+    access_token: Optional[str] = None
+    refresh_token: Optional[str] = None
     token_type: str = "bearer"
-    user: UserResponse
+    user: Optional[UserResponse] = None
+    mfa_required: bool = False
+
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
@@ -40,3 +42,15 @@ class VerifyEmailRequest(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str
+
+class MFASetupResponse(BaseModel):
+    secret: str
+    qr_code_url: str
+
+class MFAEnableRequest(BaseModel):
+    code: str
+
+class MFAVerifyRequest(BaseModel):
+    email: EmailStr
+    code: str
+

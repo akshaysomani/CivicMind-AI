@@ -58,7 +58,7 @@ export const DashboardLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex bg-slate-950 text-slate-100 transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100 light:bg-slate-50 light:text-slate-900 gradient-mesh dark:gradient-mesh light:gradient-mesh-light">
+    <div className="min-h-screen flex gradient-mesh text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* 1. Sidebar Navigation (Desktop) */}
       <aside 
@@ -264,9 +264,12 @@ export const DashboardLayout: React.FC = () => {
             </div>
           </div>
 
-          {/* Global Search Bar Placeholder */}
+          {/* Global Search Bar */}
           <div className="flex-1 max-w-md mx-6 hidden md:block">
-            <div className="relative">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              navigate(`/dashboard/citizen/reports?search=${encodeURIComponent(globalSearch)}`);
+            }} className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
                 type="text"
@@ -275,7 +278,7 @@ export const DashboardLayout: React.FC = () => {
                 placeholder="Global workspace search (reports, schemes, news)..."
                 className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900/40 dark:bg-slate-900/40 light:bg-slate-100 border border-white/10 dark:border-white/5 light:border-slate-205 text-xs focus:outline-none focus:ring-1 focus:ring-primary text-slate-900 dark:text-slate-100"
               />
-            </div>
+            </form>
           </div>
 
           {/* Controls toolbar */}

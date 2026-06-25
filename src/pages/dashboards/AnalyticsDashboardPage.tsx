@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAnalytics } from '../../context/AnalyticsContext';
 import { useNotifications } from '../../context/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, Award, Activity, Shield, RefreshCw, BarChart2, 
-  MapPin, AlertTriangle, FileText, CheckCircle2, Play, Users, Landmark
+  MapPin, AlertTriangle, FileText, CheckCircle2, Play, Users, Landmark, Navigation
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -56,8 +57,10 @@ export const AnalyticsDashboardPage: React.FC = () => {
   } = useAnalytics();
 
   const [activeTab, setActiveTab] = useState<'kpis' | 'trends' | 'insights' | 'decisions' | 'scorecards' | 'gis'>('kpis');
-  const mapCenter: [number, number] = [37.7749, -122.4194];
-  const mapZoom = 12;
+  const navigate = useNavigate();
+  // Default center: New Delhi, India
+  const mapCenter: [number, number] = [28.6139, 77.2090];
+  const mapZoom = 11;
 
   // Dynamic colors for index metrics
   const getScoreColor = (val: number) => {
@@ -100,12 +103,12 @@ export const AnalyticsDashboardPage: React.FC = () => {
     { subject: 'Readiness', A: dashboardIndex.emergency_readiness_score, fullMark: 100 }
   ] : [];
 
-  // GIS coordinates lists
+  // GIS coordinates lists — India-centered locations
   const emergencyHotspots = [
-    { id: 1, name: 'Water Pipe Leakage', type: 'Infrastructure', lat: 37.7612, lng: -122.4162, ward: 'Ward 4 - Mission', severity: 'Medium' },
-    { id: 2, name: 'Main Road Blockage', type: 'Zoning & Roads', lat: 37.7785, lng: -122.4820, ward: 'Ward 2 - Richmond', severity: 'High' },
-    { id: 3, name: 'Fire Incident Alarm', type: 'Emergency', lat: 37.7955, lng: -122.4018, ward: 'Ward 8 - Financial District', severity: 'Critical' },
-    { id: 4, name: 'Sewage Line Anomaly', type: 'Sanitation', lat: 37.7793, lng: -122.4192, ward: 'Ward 12 - Civic Center', severity: 'High' }
+    { id: 1, name: 'Water Pipe Leakage', type: 'Infrastructure', lat: 28.6280, lng: 77.2090, ward: 'Ward 4 - Chandni Chowk', severity: 'Medium' },
+    { id: 2, name: 'Main Road Blockage', type: 'Zoning & Roads', lat: 28.5355, lng: 77.3910, ward: 'Ward 2 - Noida Border', severity: 'High' },
+    { id: 3, name: 'Fire Incident Alarm', type: 'Emergency', lat: 28.6692, lng: 77.2370, ward: 'Ward 8 - Civil Lines', severity: 'Critical' },
+    { id: 4, name: 'Sewage Line Anomaly', type: 'Sanitation', lat: 28.6129, lng: 77.2295, ward: 'Ward 12 - Connaught Place', severity: 'High' }
   ];
 
   return (
@@ -519,7 +522,7 @@ export const AnalyticsDashboardPage: React.FC = () => {
                 <div className="space-y-4">
                   <div className="p-4 rounded-xl border border-white/5 bg-slate-900/40 text-xs text-slate-400 flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-primary" />
-                    <span>Mapping current emergency alerts and critical coordinates hotspots inside San Francisco boundaries. Click a pin to review ward and response details.</span>
+                    <span>Displaying live geospatial insights and critical issue hotspots. Click a pin popup and use <strong className="text-white">Route Dispatcher</strong> to navigate to the full GIS Map.</span>
                   </div>
                   <div className="h-[450px] w-full rounded-2xl overflow-hidden border border-white/10 shadow-lg relative z-10">
                     <MapContainer
@@ -550,10 +553,12 @@ export const AnalyticsDashboardPage: React.FC = () => {
                               <p className="text-xs mb-2"><strong>Coordinates:</strong> {item.lat.toFixed(4)}, {item.lng.toFixed(4)}</p>
                               <button
                                 onClick={() => {
-                                  showNotification(`Panning to coordinate center of ${item.ward}`, 'info');
+                                  navigate('/dashboard/citizen/map');
+                                  showNotification(`Routing dispatcher activated for ${item.name} in ${item.ward}`, 'success');
                                 }}
-                                className="w-full text-center bg-blue-600 text-white font-bold py-1 text-[10px] rounded hover:bg-blue-700"
+                                className="w-full text-center bg-blue-600 text-white font-bold py-1 text-[10px] rounded hover:bg-blue-700 flex items-center justify-center gap-1"
                               >
+                                <Navigation className="w-3 h-3" />
                                 Route Dispatcher
                               </button>
                             </div>

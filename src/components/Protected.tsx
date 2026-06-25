@@ -5,7 +5,7 @@ import LoadingSpinner from './LoadingSpinner';
 
 interface ProtectedProps {
   children: React.ReactNode;
-  allowedRoles?: ('Citizen' | 'Government' | 'NGO' | 'Admin')[];
+  allowedRoles?: ('Citizen' | 'Government' | 'NGO' | 'Admin' | 'Super Administrator')[];
 }
 
 export const Protected: React.FC<ProtectedProps> = ({ children, allowedRoles }) => {
@@ -25,13 +25,14 @@ export const Protected: React.FC<ProtectedProps> = ({ children, allowedRoles }) 
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
+  if (allowedRoles && !allowedRoles.includes(currentUser.role as any)) {
     // Redirect to appropriate dashboard based on user's role if unauthorized
-    const roleRoutes = {
+    const roleRoutes: Record<string, string> = {
       Citizen: '/dashboard/citizen',
       Government: '/dashboard/government',
       NGO: '/dashboard/ngo',
       Admin: '/dashboard/admin',
+      'Super Administrator': '/dashboard/admin',
     };
     const targetRoute = roleRoutes[currentUser.role] || '/';
     return <Navigate to={targetRoute} replace />;

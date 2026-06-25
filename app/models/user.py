@@ -34,6 +34,10 @@ class User(Base):
     password_reset_token: Mapped[str] = mapped_column(String(255), nullable=True)
     password_reset_expires: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     
+    # MFA Configurations
+    mfa_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    mfa_secret: Mapped[str] = mapped_column(String(50), nullable=True)
+
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)

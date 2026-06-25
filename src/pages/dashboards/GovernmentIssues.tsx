@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useGovernment } from '../../context/GovernmentContext';
 import { SectionHeader } from '../../components/SectionHeader';
 import { StatusBadge } from '../../components/government/StatusBadge';
@@ -18,13 +19,22 @@ export const GovernmentIssues: React.FC = () => {
     issues, officers, isLoading, fetchIssues, 
     assignOfficer, updateIssueStatus, exportReport 
   } = useGovernment();
+  const [searchParams] = useSearchParams();
 
   // Search & Filter States
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [category, setCategory] = useState('All');
   const [priority, setPriority] = useState('All');
   const [status, setStatus] = useState('All');
   const [ward, setWard] = useState('All');
+
+  // Sync search state from URL query parameter
+  useEffect(() => {
+    const searchVal = searchParams.get('search');
+    if (searchVal !== null) {
+      setSearch(searchVal);
+    }
+  }, [searchParams]);
 
   // Sorting
   const [sortColumn, setSortColumn] = useState('created_at');

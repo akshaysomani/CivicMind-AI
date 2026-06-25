@@ -12,48 +12,197 @@ interface Props {
 }
 
 export const downloadIssueReceipt = (issue: Issue) => {
-  const content = `===========================================================
-               CIVICMIND AI COMPLAINT RECEIPT
-===========================================================
-Complaint ID              : ${issue.complaint_id}
-Tracking Number           : ${issue.tracking_number}
-Submitted On              : ${new Date(issue.created_at).toLocaleString('en-IN')}
-Category                  : ${issue.category}
-Title                     : ${issue.title}
-Description               : ${issue.description}
------------------------------------------------------------
-LOCATION INFORMATION:
-Address                   : ${issue.address || 'Not Specified'}
-Ward                      : ${issue.ward || 'Not Specified'}
-City                      : ${issue.city}
-State                     : ${issue.state}
-Postal Code               : ${issue.postal_code || 'Not Specified'}
-Coordinates (Lat, Lon)    : ${issue.latitude !== null ? issue.latitude : 'N/A'}, ${issue.longitude !== null ? issue.longitude : 'N/A'}
-Landmark                  : ${issue.nearby_landmark || 'Not Specified'}
------------------------------------------------------------
-TICKET METRICS & STATUS:
-Current Status            : ${issue.status}
-Zoning Priority           : ${issue.priority}
-Impact Severity           : ${issue.severity}
-Assigned Department       : ${issue.assigned_department || 'General Administration Department'}
-Est. Resolution Duration  : ${issue.estimated_response_hours ? `${issue.estimated_response_hours} hours` : 'Pending Assessment'}
------------------------------------------------------------
-Report Privacy            : ${issue.is_anonymous ? 'Anonymous Submission' : 'Registered Citizen'}
-Consent Checkbox          : True (Authorized for departmental routing)
+  const receiptWindow = window.open('', '_blank', 'width=800,height=900');
+  if (!receiptWindow) {
+    alert('Please allow popups to download the receipt.');
+    return;
+  }
 
-Thank you for reporting this issue. Citizens like you make the community better!
-CivicMind AI Platform — Connecting Citizens, Empowering Cities.
-===========================================================`;
+  const receiptHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicMind AI - Complaint Receipt ${issue.complaint_id}</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8fafc; color: #1e293b; padding: 0; }
+    .page { max-width: 800px; margin: 0 auto; background: #fff; min-height: 100vh; }
+    .header { background: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%); color: white; padding: 32px 40px; }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+    .brand-name { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .brand-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; font-weight: 500; }
+    .receipt-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 8px 16px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .complaint-id { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+    .tracking { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+    .body { padding: 32px 40px; }
+    .status-bar { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-amber { background: #fef3c7; color: #d97706; }
+    .badge-rose { background: #fee2e2; color: #dc2626; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+    .badge-purple { background: #f3e8ff; color: #7c3aed; }
+    .section { margin-bottom: 24px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .section-title { background: #f1f5f9; padding: 12px 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+    .section-body { padding: 16px 20px; }
+    .field-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+    .field-row:last-child { border-bottom: none; }
+    .field-label { font-size: 12px; color: #94a3b8; font-weight: 600; min-width: 160px; }
+    .field-value { font-size: 13px; color: #1e293b; font-weight: 600; text-align: right; max-width: 380px; }
+    .description-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #334155; line-height: 1.6; margin-top: 4px; }
+    .divider { border: none; border-top: 2px dashed #e2e8f0; margin: 24px 0; }
+    .footer-note { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start; }
+    .footer-note-icon { font-size: 20px; }
+    .footer-note-text { font-size: 12px; color: #0c4a6e; line-height: 1.5; }
+    .footer-note-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+    .page-footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 20px 40px; text-align: center; }
+    .page-footer-text { font-size: 11px; color: #94a3b8; line-height: 1.6; }
+    .priority-critical { color: #dc2626; font-weight: 700; }
+    .priority-high { color: #ea580c; font-weight: 700; }
+    .priority-medium { color: #d97706; font-weight: 700; }
+    .priority-low { color: #16a34a; font-weight: 700; }
+    @media print {
+      body { background: white; }
+      .page { max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">🏛️</div>
+        <div>
+          <div class="brand-name">CivicMind AI</div>
+          <div class="brand-sub">Enterprise Civic Intelligence Platform</div>
+        </div>
+      </div>
+      <div class="receipt-badge">Official Receipt</div>
+    </div>
+    <div class="complaint-id">${issue.complaint_id}</div>
+    <div class="tracking">Tracking Number: ${issue.tracking_number} &nbsp;|&nbsp; Submitted: ${new Date(issue.created_at).toLocaleString('en-IN')}</div>
+  </div>
 
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', `Receipt-${issue.complaint_id}.txt`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  <div class="body">
+    <div class="status-bar">
+      <span class="badge badge-blue">📋 ${issue.category}</span>
+      <span class="badge ${issue.status === 'Resolved' ? 'badge-green' : issue.status === 'In Progress' ? 'badge-blue' : 'badge-amber'}">⚡ ${issue.status}</span>
+      <span class="badge ${issue.priority === 'Critical' ? 'badge-rose' : issue.priority === 'High' ? 'badge-amber' : 'badge-blue'}">🎯 ${issue.priority} Priority</span>
+      <span class="badge badge-purple">⚠️ ${issue.severity || 'Moderate'} Severity</span>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📄 Issue Details</div>
+      <div class="section-body">
+        <div class="field-row">
+          <span class="field-label">Title</span>
+          <span class="field-value">${issue.title}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Description</span>
+          <span class="field-value"></span>
+        </div>
+        <div class="description-box">${issue.description || 'No description provided.'}</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📍 Location Information</div>
+      <div class="section-body">
+        <div class="field-row">
+          <span class="field-label">Address</span>
+          <span class="field-value">${issue.address || 'Not Specified'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Ward</span>
+          <span class="field-value">${issue.ward || 'Not Specified'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">City</span>
+          <span class="field-value">${issue.city}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">State</span>
+          <span class="field-value">${issue.state}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Postal Code</span>
+          <span class="field-value">${issue.postal_code || 'Not Specified'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Coordinates</span>
+          <span class="field-value">${issue.latitude !== null ? `${issue.latitude}°N, ${issue.longitude}°E` : 'Not captured'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Landmark</span>
+          <span class="field-value">${issue.nearby_landmark || 'None'}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎫 Ticket Status & Metrics</div>
+      <div class="section-body">
+        <div class="field-row">
+          <span class="field-label">Current Status</span>
+          <span class="field-value">${issue.status}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Zoning Priority</span>
+          <span class="field-value priority-${(issue.priority || '').toLowerCase()}">${issue.priority}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Impact Severity</span>
+          <span class="field-value">${issue.severity || 'Moderate'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Assigned Department</span>
+          <span class="field-value">${issue.assigned_department || 'General Administration'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Est. Resolution</span>
+          <span class="field-value">${issue.estimated_response_hours ? `${issue.estimated_response_hours} hours` : 'Pending Assessment'}</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Submission Type</span>
+          <span class="field-value">${issue.is_anonymous ? '🔒 Anonymous Submission' : '👤 Registered Citizen'}</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="footer-note">
+      <div class="footer-note-icon">ℹ️</div>
+      <div class="footer-note-text">
+        <div class="footer-note-title">Thank you for making your community better!</div>
+        This is your official CivicMind AI complaint receipt. Keep it for your records. You can track the status of this complaint at any time using Complaint ID <strong>${issue.complaint_id}</strong> or Tracking Number <strong>${issue.tracking_number}</strong>. For support, contact support@civicmind.ai
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <div class="page-footer-text">
+      CivicMind AI Platform — Connecting Citizens, Empowering Cities<br />
+      &copy; ${new Date().getFullYear()} CivicMind AI. All rights reserved. &nbsp;|&nbsp; support@civicmind.ai
+    </div>
+    <button class="print-btn" onclick="window.print()" style="margin-top:12px;padding:10px 24px;background:#2563eb;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;">🖨️ Print / Save as PDF</button>
+  </div>
+</div>
+<script>window.onload = function() { document.querySelector('.print-btn').scrollIntoView(); }<\/script>
+</body>
+</html>`;
+
+  receiptWindow.document.write(receiptHtml);
+  receiptWindow.document.close();
 };
+
 
 const IssueCard: React.FC<Props> = ({ issue, onSave, onDelete }) => {
   const navigate = useNavigate();

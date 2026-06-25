@@ -1,5 +1,5 @@
 import React from 'react';
-import { SystemHealth } from '../../services/adminService';
+import type { SystemHealth } from '../../services/adminService';
 import { Activity, Database, Server } from 'lucide-react';
 
 interface SystemHealthWidgetProps {

@@ -1,21 +1,42 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useReporting } from '../../context/ReportingContext';
+import { useNotifications } from '../../context/NotificationContext';
 
 import { 
   FileText, Download, Printer, ShieldAlert, 
-  MapPin, CheckCircle, ArrowLeft, Activity, Info
+  MapPin, CheckCircle, ArrowLeft, Activity, Info, Share2, Landmark
 } from 'lucide-react';
 
 export const ReportViewerPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { savedReports, exportReport } = useReporting();
+  const { showNotification } = useNotifications();
 
   const report = savedReports.find(r => r.id === Number(id));
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/dashboard/citizen/report-viewer/${id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: report?.title || 'CivicMind AI Report',
+          text: 'View this executive report from CivicMind AI',
+          url: shareUrl,
+        });
+      } catch {
+        // User cancelled share
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl)
+        .then(() => showNotification('Report link copied to clipboard!', 'success'))
+        .catch(() => showNotification('Failed to copy link.', 'error'));
+    }
   };
 
   const getScoreColor = (score: number) => {
@@ -54,6 +75,15 @@ export const ReportViewerPage: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2">
+          {/* Share button */}
+          <button
+            onClick={handleShare}
+            className="p-2.5 bg-slate-850 hover:bg-slate-750 border border-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex items-center gap-2"
+          >
+            <Share2 className="w-4 h-4" />
+            Share
+          </button>
+
           {/* Exporter triggers */}
           <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-white/10">
             {['pdf', 'excel', 'csv', 'pptx', 'json'].map(fmt => (
@@ -75,6 +105,23 @@ export const ReportViewerPage: React.FC = () => {
             <Printer className="w-4 h-4" />
             Print Report
           </button>
+        </div>
+      </div>
+
+      {/* Print Header — visible only when printing */}
+      <div className="hidden print:flex items-center justify-between mb-8 pb-6 border-b-2 border-slate-300">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+            <Landmark className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="text-xl font-extrabold text-slate-900">CivicMind AI</div>
+            <div className="text-xs text-slate-500 font-medium">Enterprise Civic Intelligence Platform</div>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-slate-500">Printed on {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+          <div className="text-xs text-slate-500">support@civicmind.ai</div>
         </div>
       </div>
 

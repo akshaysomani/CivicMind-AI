@@ -74,7 +74,7 @@ export const GisMap: React.FC = () => {
     setMapProvider,
   } = useMap();
 
-  const defaultCenter: [number, number] = [37.7749, -122.4194];
+  const defaultCenter: [number, number] = [28.6139, 77.2090]; // New Delhi, India
 
   // Map box tile provider layer URLs
   const getTileLayerUrl = () => {

@@ -31,10 +31,13 @@ export const AiAssistantPage: React.FC = () => {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom of messages
+  // Auto-scroll to bottom of messages container only (not whole page)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [chatHistory, isThinking]);
 
   // Initial conversation check: if conversations exist but none active, load the first one
@@ -245,7 +248,7 @@ export const AiAssistantPage: React.FC = () => {
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
           
           {/* Welcome Screen when chat history empty */}
           {chatHistory.length === 0 && (

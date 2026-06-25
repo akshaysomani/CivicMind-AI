@@ -43,7 +43,7 @@ export const PermissionManagementPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {MODULES.map((mod, idx) => (
+              {MODULES.map((mod) => (
                 <tr key={mod} className="border-b border-slate-800 hover:bg-slate-800/20 transition-colors">
                   <td className="px-4 py-4 font-medium text-white">{mod}</td>
                   {ROLES.map(role => (

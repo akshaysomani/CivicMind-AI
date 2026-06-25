@@ -1,21 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Landmark, Github, FileText, ShieldAlert, BookOpen, Mail } from 'lucide-react';
-import { useNotifications } from '../context/NotificationContext';
+import { Landmark, Github, FileText, ShieldAlert, BookOpen, Mail, Twitter, Linkedin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { showNotification } = useNotifications();
-
-  const handleDocumentationTrigger = (e: React.MouseEvent) => {
-    e.preventDefault();
-    showNotification('System documentation will be generated in upcoming modules!', 'info');
-  };
-
-  const handleSocialTrigger = (e: React.MouseEvent, type: string) => {
-    e.preventDefault();
-    showNotification(`${type} connection is simulated for Module 1.`, 'success');
-  };
-
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-white/5 pt-16 pb-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,26 +22,36 @@ export const Footer: React.FC = () => {
             </p>
             <div className="flex gap-4">
               <a
-                href="#github"
-                onClick={(e) => handleSocialTrigger(e, 'GitHub')}
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl border border-white/5 transition-colors"
-                aria-label="GitHub Repository Link"
+                aria-label="GitHub Repository"
               >
                 <Github className="w-5 h-5" />
               </a>
               <a
-                href="#docs"
-                onClick={handleDocumentationTrigger}
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl border border-white/5 transition-colors"
-                aria-label="Developer Documentation Link"
+                aria-label="Twitter / X Profile"
               >
-                <BookOpen className="w-5 h-5" />
+                <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="#contact"
-                onClick={(e) => handleSocialTrigger(e, 'Contact Email')}
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl border border-white/5 transition-colors"
-                aria-label="Contact Email Support Link"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a
+                href="mailto:support@civicmind.ai"
+                className="p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl border border-white/5 transition-colors"
+                aria-label="Email Support"
               >
                 <Mail className="w-5 h-5" />
               </a>
@@ -79,6 +76,11 @@ export const Footer: React.FC = () => {
               <li>
                 <Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link>
               </li>
+              <li>
+                <a href="mailto:support@civicmind.ai" className="hover:text-white transition-colors">
+                  support@civicmind.ai
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -89,20 +91,36 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-3.5 text-sm">
               <li>
-                <a href="#privacy" onClick={(e) => { e.preventDefault(); showNotification('Privacy Policy is currently static.', 'info'); }} className="hover:text-white transition-colors flex items-center gap-2">
+                <Link to="/about" className="hover:text-white transition-colors flex items-center gap-2">
                   <ShieldAlert className="w-4 h-4 text-slate-500" />
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#terms" onClick={(e) => { e.preventDefault(); showNotification('Terms of Service is currently static.', 'info'); }} className="hover:text-white transition-colors flex items-center gap-2">
+                <Link to="/about" className="hover:text-white transition-colors flex items-center gap-2">
                   <FileText className="w-4 h-4 text-slate-500" />
                   Terms of Service
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <BookOpen className="w-4 h-4 text-slate-500" />
+                  System Documentation
                 </a>
               </li>
               <li>
-                <a href="#docs" onClick={handleDocumentationTrigger} className="hover:text-white transition-colors flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-slate-500" />
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors flex items-center gap-2"
+                >
+                  <Github className="w-4 h-4 text-slate-500" />
                   API Reference
                 </a>
               </li>

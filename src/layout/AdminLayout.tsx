@@ -23,7 +23,7 @@ import clsx from 'clsx';
 
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -100,11 +100,11 @@ const AdminLayout: React.FC = () => {
         <div className="p-4 border-t border-slate-800">
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center">
-              <span className="font-bold text-white">{user?.name?.charAt(0) || 'A'}</span>
+              <span className="font-bold text-white">{currentUser?.first_name?.charAt(0) || 'A'}</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-              <p className="text-xs text-slate-500 truncate">{user?.role}</p>
+              <p className="text-sm font-medium text-white truncate">{currentUser?.first_name} {currentUser?.last_name}</p>
+              <p className="text-xs text-slate-500 truncate">{currentUser?.role}</p>
             </div>
           </div>
           <button 

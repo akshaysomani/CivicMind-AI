@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Save, Server, Globe, Shield, Bell } from 'lucide-react';
+import { Save, Server, Globe, Shield, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const SystemSettingsPage: React.FC = () => {
@@ -87,14 +87,86 @@ const AnimateTabContent = ({ tab }: { tab: string }) => {
           </div>
         </div>
       )}
-      {tab !== 'general' && (
-        <div className="flex flex-col items-center justify-center py-12 text-slate-400">
-          <Settings className="w-12 h-12 mb-4 opacity-20" />
-          <p>Configuration options for {tab} are loaded here.</p>
+
+      {tab === 'ai' && (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold text-white border-b border-slate-800 pb-3">AI & Vertex Models Guardrails</h3>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-white font-medium text-sm">Prompt Injection Filter</h4>
+                <p className="text-xs text-slate-400">Scan user prompts for malicious command overrides.</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" defaultChecked className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <div>
+                <h4 className="text-white font-medium text-sm">PII Redaction Engine</h4>
+                <p className="text-xs text-slate-400">Scrub names, emails, phone numbers before hitting Gemini APIs.</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" defaultChecked className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <div>
+                <h4 className="text-white font-medium text-sm">RAG Source Grounding Check</h4>
+                <p className="text-xs text-slate-400">Validate AI response overlap with retrieved documents.</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" defaultChecked className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab === 'security' && (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold text-white border-b border-slate-800 pb-3">Identity & Password Policies</h3>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-white font-medium text-sm">Multi-Factor Authentication (MFA)</h4>
+                <p className="text-xs text-slate-400">Force government and admin staff accounts to enroll in MFA.</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" defaultChecked className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+              </label>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800">
+              <label className="block text-sm font-medium text-slate-300 mb-1">Inactivity Timeout Limit (Minutes)</label>
+              <input type="number" defaultValue="15" className="w-24 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white focus:border-indigo-500 focus:outline-none" />
+            </div>
+
+            <div className="pt-4 border-t border-slate-800">
+              <label className="block text-sm font-medium text-slate-300 mb-1">Max Login Lockout Attempts</label>
+              <input type="number" defaultValue="5" className="w-24 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white focus:border-indigo-500 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tab === 'notifications' && (
+        <div className="space-y-6">
+          <h3 className="text-lg font-semibold text-white border-b border-slate-800 pb-3">Platform Notifications</h3>
+          <p className="text-sm text-slate-400">Configure email and dispatch alerts configuration settings.</p>
         </div>
       )}
     </motion.div>
   );
 };
+
 
 export default SystemSettingsPage;

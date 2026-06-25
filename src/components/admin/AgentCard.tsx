@@ -1,5 +1,5 @@
 import React from 'react';
-import { AgentHealth } from '../../services/adminService';
+import type { AgentHealth } from '../../services/adminService';
 import { Activity, Cpu, HardDrive, RefreshCw, Power } from 'lucide-react';
 import { motion } from 'framer-motion';
 

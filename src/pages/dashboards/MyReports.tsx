@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useIssues } from '../../context/IssueContext';
 import { ISSUE_CATEGORIES } from '../../types/issue';
 import IssueCard from '../../components/issues/IssueCard';
@@ -10,10 +10,19 @@ const PRIORITY_OPTIONS = ['Low', 'Medium', 'High', 'Critical'];
 
 const MyReports: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { issues, isLoading, fetchIssues, deleteIssue, toggleSaveIssue, filters, setFilters, resetFilters } = useIssues();
   const [page, setPage] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
   const LIMIT = 12;
+
+  // Sync search from URL query parameter if present
+  useEffect(() => {
+    const searchVal = searchParams.get('search');
+    if (searchVal !== null) {
+      setFilters({ search: searchVal });
+    }
+  }, [searchParams, setFilters]);
 
   const load = useCallback((pageNum = 0) => {
     fetchIssues({ limit: LIMIT, offset: pageNum * LIMIT });

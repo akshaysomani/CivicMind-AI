@@ -87,6 +87,9 @@ const MonitoringPage = lazy(() => import('./pages/admin/MonitoringPage'));
 const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const SecurityCenterPage = lazy(() => import('./pages/admin/SecurityCenterPage'));
 const SystemSettingsPage = lazy(() => import('./pages/admin/SystemSettingsPage'));
+const CacheManagementPage = lazy(() => import('./pages/admin/CacheManagementPage'));
+const ErrorMonitoringPage = lazy(() => import('./pages/admin/ErrorMonitoringPage'));
+
 
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
 const AiAssistantPage = lazy(() => import('./pages/dashboards/AiAssistantPage'));
@@ -250,7 +253,10 @@ export const App: React.FC = () => {
                               <Route path="monitoring" element={<MonitoringPage />} />
                               <Route path="audit" element={<AuditLogsPage />} />
                               <Route path="security" element={<SecurityCenterPage />} />
+                              <Route path="cache" element={<CacheManagementPage />} />
+                              <Route path="errors" element={<ErrorMonitoringPage />} />
                               <Route path="settings" element={<SystemSettingsPage />} />
+
                             </Route>
 
                             {/* Wildcard 404 */}

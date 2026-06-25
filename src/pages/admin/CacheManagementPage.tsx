@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
-import { AuditWidget } from '../../components/admin/AuditWidget';
-import { Shield } from 'lucide-react';
+import { CacheWidget } from '../../components/admin/CacheWidget';
+import { Cpu } from 'lucide-react';
 
-export const AuditLogsPage: React.FC = () => {
-  const { auditLogs, loading } = useAdmin();
+export const CacheManagementPage: React.FC = () => {
+  const { cacheStats, clearCache, loading } = useAdmin();
 
   if (loading) {
     return (
@@ -19,19 +19,18 @@ export const AuditLogsPage: React.FC = () => {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center">
-            <Shield className="w-8 h-8 mr-3 text-indigo-500" />
-            Audit Logs
+            <Cpu className="w-8 h-8 mr-3 text-indigo-500" />
+            Cache Management
           </h1>
-          <p className="text-slate-400 mt-1">Immutable record of all critical system actions for governance and compliance.</p>
+          <p className="text-slate-400 mt-1">Configure database and LLM caching parameters and purge namespaces.</p>
         </div>
       </div>
 
-      <div className="max-w-5xl">
-        <AuditWidget logs={auditLogs} />
+      <div className="max-w-4xl">
+        <CacheWidget stats={cacheStats} onClear={clearCache} />
       </div>
     </div>
   );
 };
 
-export default AuditLogsPage;
-
+export default CacheManagementPage;

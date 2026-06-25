@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useReporting } from '../../context/ReportingContext';
 import { SectionHeader } from '../../components/SectionHeader';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   BarChart3, FileText, ShieldAlert, CheckCircle, 
-  Users, Activity, Clock, RefreshCw, ChevronRight, Play
+  Users, Activity, Clock, RefreshCw, ChevronRight, Play, Download
 } from 'lucide-react';
 
 export const ExecutiveDashboardPage: React.FC = () => {
@@ -13,9 +13,11 @@ export const ExecutiveDashboardPage: React.FC = () => {
     savedReports,
     loading,
     fetchDashboardMetrics,
-    fetchSavedReports
+    fetchSavedReports,
+    exportReport
   } = useReporting();
   const navigate = useNavigate();
+  const [activeDropdownReportId, setActiveDropdownReportId] = useState<number | null>(null);
 
   const handleRefresh = async () => {
     await Promise.all([fetchDashboardMetrics(), fetchSavedReports()]);
@@ -184,13 +186,59 @@ export const ExecutiveDashboardPage: React.FC = () => {
                         Type: {report.report_type} | Created {new Date(report.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <button
-                      onClick={() => navigate(`/dashboard/citizen/report-viewer/${report.id}`)}
-                      className="px-3.5 py-1.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary hover:text-white rounded-lg font-bold text-xs transition-all flex items-center gap-1"
-                    >
-                      <Play className="w-3.5 h-3.5" />
-                      View
-                    </button>
+                    <div className="flex items-center gap-2 relative">
+                      <button
+                        onClick={() => navigate(`/dashboard/citizen/report-viewer/${report.id}`)}
+                        className="px-3.5 py-1.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary hover:text-white rounded-lg font-bold text-xs transition-all flex items-center gap-1"
+                      >
+                        <Play className="w-3.5 h-3.5" />
+                        View
+                      </button>
+
+                      <div className="relative">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveDropdownReportId(activeDropdownReportId === report.id ? null : report.id);
+                          }}
+                          className="p-1.5 bg-slate-800/60 hover:bg-slate-700 border border-white/10 text-slate-350 hover:text-white rounded-lg transition-all flex items-center justify-center"
+                          title="Download Report"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                        </button>
+
+                        {activeDropdownReportId === report.id && (
+                          <>
+                            {/* Backdrop overlay to close dropdown */}
+                            <div 
+                              className="fixed inset-0 z-10" 
+                              onClick={() => setActiveDropdownReportId(null)}
+                            />
+                            <div className="absolute right-0 mt-1.5 w-36 bg-slate-900 border border-white/10 rounded-lg shadow-xl py-1 z-20">
+                              {[
+                                { label: 'PDF Document', format: 'pdf' },
+                                { label: 'Excel Sheet', format: 'excel' },
+                                { label: 'CSV Spreadsheet', format: 'csv' },
+                                { label: 'PowerPoint', format: 'pptx' },
+                                { label: 'JSON Data', format: 'json' },
+                              ].map((opt) => (
+                                <button
+                                  key={opt.format}
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    setActiveDropdownReportId(null);
+                                    await exportReport(report.id, opt.format);
+                                  }}
+                                  className="w-full text-left px-3 py-1.5 text-xs text-slate-350 hover:bg-slate-800 hover:text-white transition-all block font-medium"
+                                >
+                                  {opt.label}
+                                </button>
+                              ))}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

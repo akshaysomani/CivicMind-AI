@@ -1,11 +1,25 @@
 @import "tailwindcss";
 
+/* =====================================================
+   CIVICMIND AI — THEME SYSTEM
+   Uses CSS variables to ensure ALL components respond
+   correctly to light/dark mode switching via .dark/.light
+   class on <html> element.
+   ===================================================== */
+
+/* Configure Tailwind v4 dark/light mode variants */
+@variant dark (&:where(.dark, .dark *));
+@variant light (&:where(.light, .light *));
+
+/* ========== DESIGN TOKENS ========== */
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-heading: 'Poppins', sans-serif;
+  --font-sans: 'Inter', 'SF Pro Text', system-ui, sans-serif;
+  --font-heading: 'Poppins', 'SF Pro Display', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   --color-primary: #2563eb;
   --color-primary-dark: #1d4ed8;
+  --color-primary-light: #3b82f6;
   --color-secondary: #06b6d4;
   --color-secondary-dark: #0891b2;
   --color-accent: #22c55e;
@@ -15,87 +29,522 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 9s ease-in-out infinite;
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 8s linear infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
 }
 
+/* ========== KEYFRAMES ========== */
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(1.5deg); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.35); }
 }
 
+/* =====================================================
+   THEME CSS VARIABLES
+   Set per-theme values on :root via html class
+   ===================================================== */
+
+/* === DARK MODE (Default) === */
+html, html.dark {
+  /* Backgrounds */
+  --bg-page: #0b1120;
+  --bg-surface: #0f172a;
+  --bg-card: rgba(15, 23, 42, 0.55);
+  --bg-card-hover: rgba(15, 23, 42, 0.75);
+  --bg-input: rgba(15, 23, 42, 0.6);
+  --bg-navbar: rgba(11, 17, 32, 0.85);
+  --bg-sidebar: rgba(11, 17, 32, 0.95);
+  --bg-muted: rgba(255, 255, 255, 0.04);
+  --bg-hover: rgba(255, 255, 255, 0.05);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-heading: #ffffff;
+  --text-accent: #3b82f6;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  /* Status */
+  color-scheme: dark;
+}
+
+/* === LIGHT MODE === */
+html.light {
+  /* Backgrounds */
+  --bg-page: #f0f4ff;
+  --bg-surface: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.80);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --bg-input: rgba(248, 250, 252, 0.95);
+  --bg-navbar: rgba(255, 255, 255, 0.90);
+  --bg-sidebar: rgba(255, 255, 255, 0.98);
+  --bg-muted: rgba(0, 0, 0, 0.03);
+  --bg-hover: rgba(0, 0, 0, 0.04);
+
+  /* Text */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-heading: #0f172a;
+  --text-accent: #2563eb;
+
+  /* Borders */
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-default: rgba(0, 0, 0, 0.11);
+  --border-strong: rgba(0, 0, 0, 0.20);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+
+  /* Status */
+  color-scheme: light;
+}
+
+/* =====================================================
+   BASE LAYER — Apply CSS variables to HTML elements
+   ===================================================== */
 @layer base {
+  html { scroll-behavior: smooth; }
+
   body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
     @apply font-sans transition-colors duration-300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  
-  /* Focus States for Accessibility */
+
+  h1, h2, h3 {
+    color: var(--text-heading);
+    @apply font-heading;
+    letter-spacing: -0.025em;
+  }
+
+  h4, h5, h6 {
+    color: var(--text-primary);
+    @apply font-heading;
+  }
+
+  p { color: var(--text-secondary); }
+
+  /* Focus States */
   *:focus-visible {
-    @apply outline-2 outline-primary outline-offset-2;
+    @apply outline-2 outline-primary outline-offset-2 rounded-sm;
+  }
+
+  /* =====================================================
+     GLOBAL LIGHT-MODE OVERRIDES
+     These cover all Tailwind slate-xxx classes used in
+     the app so they respond to the .light class on <html>
+     ===================================================== */
+  html.light {
+    /* Main backgrounds */
+    --tw-bg-opacity: 1;
+  }
+
+  /* Backgrounds */
+  html.light .bg-slate-950,
+  html.light .bg-slate-950\/20,
+  html.light .bg-slate-950\/30,
+  html.light .bg-slate-950\/40,
+  html.light .bg-slate-950\/70 {
+    background-color: rgba(240, 244, 255, var(--tw-bg-opacity, 1)) !important;
+  }
+  html.light .bg-slate-900,
+  html.light .bg-slate-900\/20,
+  html.light .bg-slate-900\/30,
+  html.light .bg-slate-900\/40,
+  html.light .bg-slate-900\/50,
+  html.light .bg-slate-900\/60,
+  html.light .bg-slate-900\/70 {
+    background-color: rgba(248, 250, 252, 0.9) !important;
+  }
+  html.light .bg-slate-800,
+  html.light .bg-slate-800\/40,
+  html.light .bg-slate-800\/60,
+  html.light .bg-slate-800\/80 {
+    background-color: rgba(226, 232, 240, 0.7) !important;
+  }
+
+  /* Text colors */
+  html.light .text-white { color: #0f172a !important; }
+  html.light .text-slate-100 { color: #1e293b !important; }
+  html.light .text-slate-200 { color: #334155 !important; }
+  html.light .text-slate-300 { color: #475569 !important; }
+  html.light .text-slate-350 { color: #52647d !important; }
+  html.light .text-slate-400 { color: #64748b !important; }
+  html.light .text-slate-500 { color: #94a3b8 !important; }
+
+  /* Border colors */
+  html.light .border-white\/5 { border-color: rgba(0,0,0,0.06) !important; }
+  html.light .border-white\/8 { border-color: rgba(0,0,0,0.08) !important; }
+  html.light .border-white\/10 { border-color: rgba(0,0,0,0.10) !important; }
+  html.light .border-white\/12 { border-color: rgba(0,0,0,0.12) !important; }
+  html.light .border-white\/20 { border-color: rgba(0,0,0,0.16) !important; }
+
+  /* Cards and panels */
+  html.light .glass,
+  html.light .glass-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08) !important;
+  }
+
+  /* Dividers */
+  html.light .divide-white\/5 > * + * { border-color: rgba(0,0,0,0.07) !important; }
+  html.light .divide-white\/10 > * + * { border-color: rgba(0,0,0,0.09) !important; }
+
+  /* Backdrop elements */
+  html.light .backdrop-blur-md,
+  html.light .backdrop-blur-lg,
+  html.light .backdrop-blur-xl { backdrop-filter: blur(12px) !important; }
+
+  /* Hover states */
+  html.light .hover\:bg-slate-900\/50:hover { background-color: rgba(226,232,240,0.6) !important; }
+  html.light .hover\:bg-slate-800\/80:hover { background-color: rgba(203,213,225,0.8) !important; }
+  html.light .hover\:bg-slate-700\/80:hover { background-color: rgba(203,213,225,0.9) !important; }
+
+  /* Navigation sidebar in light mode */
+  html.light aside { background-color: rgba(255, 255, 255, 0.98) !important; }
+  html.light header {
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    border-bottom-color: rgba(0,0,0,0.08) !important;
+  }
+
+  /* Input fields */
+  html.light input,
+  html.light select,
+  html.light textarea {
+    background-color: rgba(248, 250, 252, 0.95) !important;
+    color: #1e293b !important;
+    border-color: rgba(0,0,0,0.12) !important;
+  }
+  html.light input::placeholder,
+  html.light textarea::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  /* Footer */
+  html.light footer {
+    background-color: #f8fafc !important;
+    border-top-color: rgba(0,0,0,0.08) !important;
+    color: #64748b;
+  }
+  html.light footer a { color: #64748b; }
+  html.light footer a:hover { color: #1e293b; }
+  html.light footer h4 { color: #1e293b !important; }
+  html.light footer p { color: #64748b !important; }
+
+  /* Gradient backgrounds */
+  html.light .gradient-mesh {
+    background-color: #eef2ff !important;
+    background-image:
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 55%),
+      radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.09) 0px, transparent 55%),
+      radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.07) 0px, transparent 55%) !important;
+  }
+
+  /* Table rows */
+  html.light table { color: #334155 !important; }
+  html.light th { background-color: rgba(241, 245, 249, 0.8) !important; color: #64748b !important; }
+  html.light td { border-color: rgba(0,0,0,0.06) !important; }
+
+  /* Dropdown menus */
+  html.light [class*="absolute"][class*="bg-slate"] {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(0,0,0,0.1) !important;
+    color: #1e293b !important;
   }
 }
 
-/* Glassmorphism Styles */
+/* =====================================================
+   GLASSMORPHISM COMPONENTS
+   ===================================================== */
 .glass {
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border-subtle);
 }
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .glass-navbar {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-navbar);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Alias for legacy usage — same as glass-navbar */
 .glass-navbar-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--bg-navbar);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.25s ease;
+}
+
+.glass-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-default);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+/* =====================================================
+   BACKGROUND GRADIENTS
+   ===================================================== */
 .gradient-mesh {
-  background-color: #0f172a;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(34, 197, 94, 0.08) 0px, transparent 50%);
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 55%),
+    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.14) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.10) 0px, transparent 55%),
+    radial-gradient(at 0% 100%, rgba(34, 197, 94, 0.06) 0px, transparent 45%);
 }
 
 .gradient-mesh-light {
-  background-color: #f8fafc;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.06) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(34, 197, 94, 0.04) 0px, transparent 50%);
+  background-color: #eef2ff;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.10) 0px, transparent 55%),
+    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.06) 0px, transparent 55%);
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
+/* =====================================================
+   LANDING PAGE — LIGHT MODE FIX
+   ===================================================== */
+html.light .landing-section {
   background: transparent;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
+
+/* Hero section in light mode: fix white text */
+html.light section h1,
+html.light section h2 {
+  color: #0f172a !important;
 }
 
-/* Leaflet Map Styling Override */
+html.light section p {
+  color: #475569 !important;
+}
+
+/* =====================================================
+   PREMIUM INTERACTIVE ELEMENTS
+   ===================================================== */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  @apply font-bold rounded-xl transition-all duration-200 text-white;
+}
+.btn-primary:hover {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.25s ease;
+  @apply relative rounded-2xl p-5 overflow-hidden;
+}
+.metric-card:hover {
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 0 30px rgba(37, 99, 235, 0.08);
+  transform: translateY(-2px);
+}
+.metric-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.metric-card:hover::after { opacity: 1; }
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.glow-border { animation: glow-pulse 2.5s ease-in-out infinite; }
+
+/* =====================================================
+   NAVIGATION SIDEBAR
+   ===================================================== */
+.nav-item {
+  @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200;
+  color: var(--text-secondary);
+}
+.nav-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--text-primary);
+}
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(6, 182, 212, 0.7));
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* =====================================================
+   BADGES
+   ===================================================== */
+.badge-primary {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 9999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  background: rgba(37, 99, 235, 0.12); color: #60a5fa;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+html.light .badge-primary { background: rgba(37,99,235,0.10); color: #1d4ed8; }
+
+.badge-success { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+html.light .badge-success { color: #16a34a; }
+
+.badge-warning { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+html.light .badge-warning { color: #d97706; }
+
+.badge-danger { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+html.light .badge-danger { color: #dc2626; }
+
+/* =====================================================
+   FORM ELEMENTS
+   ===================================================== */
+.form-input {
+  @apply w-full px-4 py-2.5 rounded-xl text-sm font-medium;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  outline: none;
+}
+.form-input:focus {
+  border-color: rgba(37, 99, 235, 0.5);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+.form-input::placeholder { color: var(--text-muted); }
+
+/* =====================================================
+   GRADIENT TEXT
+   ===================================================== */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-gradient-accent {
+  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.45); }
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+
+/* =====================================================
+   LEAFLET MAP
+   ===================================================== */
 .leaflet-container {
-  border-radius: 20px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.leaflet-popup-content-wrapper {
+  background: #0f172a !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+  color: #e2e8f0 !important;
+}
+.leaflet-popup-tip { background: #0f172a !important; }
+.leaflet-popup-close-button { color: #64748b !important; }
+
+/* =====================================================
+   PRINT STYLES
+   ===================================================== */
+@media print {
+  .no-print, nav, header, aside, footer, [class*="sticky"] { display: none !important; }
+  body { background: white !important; color: #1e293b !important; font-size: 12pt; }
+  @page { margin: 1.5cm 2cm; }
+}
+
+/* =====================================================
+   UTILITY ANIMATIONS
+   ===================================================== */
+.animate-slide-up   { animation: slideUp 0.4s ease-out forwards; }
+.animate-fade-in    { animation: fadeIn 0.5s ease-out forwards; }
+.animate-glow       { animation: glow-pulse 2.5s ease-in-out infinite; }
+.animate-float      { animation: float 6s ease-in-out infinite; }
+.animate-float-slow { animation: float 9s ease-in-out infinite; }
+.animate-spin-slow  { animation: spin 8s linear infinite; }
+.animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+/* =====================================================
+   SECTION / DIVIDER UTILITIES
+   ===================================================== */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37,99,235,0.4), transparent);
+  margin: 2rem 0;
+}
+
+.section-highlight { @apply relative; }
+.section-highlight::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; border-radius: 99px;
+  background: linear-gradient(180deg, #2563eb, #06b6d4);
 }

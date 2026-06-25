@@ -1,5 +1,5 @@
 import React from 'react';
-import { AdminUser } from '../../services/adminService';
+import type { AdminUser } from '../../services/adminService';
 import { Edit2, Ban, Trash2, MoreVertical } from 'lucide-react';
 
 interface UserTableProps {

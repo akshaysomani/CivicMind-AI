@@ -3,8 +3,7 @@ import { useAdmin } from '../../context/AdminContext';
 import { AdminKPICard } from '../../components/admin/AdminKPICard';
 import { SystemHealthWidget } from '../../components/admin/SystemHealthWidget';
 import { AgentCard } from '../../components/admin/AgentCard';
-import { Users, ServerCrash, Bot, ShieldAlert, Activity, FileText } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Users, Bot, ShieldAlert, Activity, FileText } from 'lucide-react';
 
 export const AdminDashboardPage: React.FC = () => {
   const { systemHealth, users, agents, auditLogs, loading } = useAdmin();
