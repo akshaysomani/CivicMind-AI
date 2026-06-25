@@ -40,7 +40,7 @@ def setup_database():
         async with TestSessionLocal() as session:
             # Create a default citizen first so seed_db can generate reports for them
             from app.core import security
-            hashed_pwd = security.get_password_hash("securepassword123")
+            hashed_pwd = security.get_password_hash("StrongPass@123")
             default_citizen = User(
                 first_name="Test",
                 last_name="Citizen",
@@ -81,7 +81,7 @@ def get_auth_headers(email: str):
             if not user:
                 # Add default citizen or officer
                 from app.core import security
-                hashed_pwd = security.get_password_hash("securepassword123")
+                hashed_pwd = security.get_password_hash("StrongPass@123")
                 role = "Citizen" if "citizen" in email else "Government"
                 sub_role = "Municipal Officer" if "officer" in email else None
                 new_user = User(
@@ -103,7 +103,7 @@ def get_auth_headers(email: str):
     
     login_payload = {
         "email": email,
-        "password": "securepassword123"
+        "password": "StrongPass@123"
     }
     response = client.post("/api/v1/auth/login", json=login_payload)
     token = response.json()["access_token"]

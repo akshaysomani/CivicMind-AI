@@ -15,7 +15,8 @@ import {
   Activity,
   LogOut,
   Menu,
-  X
+  X,
+  ClipboardCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -43,6 +44,7 @@ const AdminLayout: React.FC = () => {
     { to: '/dashboard/admin/monitoring', icon: Activity, label: 'Monitoring' },
     { to: '/dashboard/admin/audit', icon: FileText, label: 'Audit Logs' },
     { to: '/dashboard/admin/security', icon: ShieldAlert, label: 'Security Center' },
+    { to: '/dashboard/admin/qa', icon: ClipboardCheck, label: 'QA & Testing' },
     { to: '/dashboard/admin/settings', icon: Settings, label: 'System Settings' },
   ];
 

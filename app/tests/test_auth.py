@@ -58,7 +58,7 @@ def test_register():
         "last_name": "Doe",
         "email": "john.doe@example.com",
         "phone": "+15550199",
-        "password": "strongpassword123",
+        "password": "StrongPass@123",
         "role": "Citizen",
         "city": "San Francisco",
         "state": "California",
@@ -75,7 +75,7 @@ def test_login_success():
     client = TestClient(app)
     payload = {
         "email": "john.doe@example.com",
-        "password": "strongpassword123"
+        "password": "StrongPass@123"
     }
     response = client.post("/api/v1/auth/login", json=payload)
     assert response.status_code == 200
@@ -92,7 +92,7 @@ def test_login_failure_lockout():
         "last_name": "User",
         "email": "lock.user@example.com",
         "phone": "+15550299",
-        "password": "lockpassword123",
+        "password": "LockPass@123",
         "role": "Citizen",
         "city": "Seattle",
         "state": "Washington",

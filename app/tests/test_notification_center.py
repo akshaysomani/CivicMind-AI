@@ -53,7 +53,7 @@ def auth_headers():
         "last_name": "Tester",
         "email": "notif.test@example.com",
         "phone": "+1555123456",
-        "password": "securepassword123",
+        "password": "StrongPass@123",
         "role": "Citizen",
         "city": "San Francisco",
         "state": "California",
@@ -64,7 +64,7 @@ def auth_headers():
     # Login to get token
     payload_login = {
         "email": "notif.test@example.com",
-        "password": "securepassword123"
+        "password": "StrongPass@123"
     }
     response_login = client.post("/api/v1/auth/login", json=payload_login)
     token = response_login.json()["access_token"]

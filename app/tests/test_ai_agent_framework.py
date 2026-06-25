@@ -169,7 +169,7 @@ def test_api_authorized_flow():
         "last_name": "Test",
         "email": "ai.test@example.com",
         "phone": "+15550399",
-        "password": "testpassword123",
+        "password": "StrongPass@123",
         "role": "Government",
         "city": "Oakland",
         "state": "California",
@@ -180,7 +180,7 @@ def test_api_authorized_flow():
     # 2. Login to get token
     payload_login = {
         "email": "ai.test@example.com",
-        "password": "testpassword123"
+        "password": "StrongPass@123"
     }
     response_login = client.post("/api/v1/auth/login", json=payload_login)
     assert response_login.status_code == 200

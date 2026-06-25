@@ -19,6 +19,7 @@ import { ForecastProvider } from './context/ForecastContext';
 import { NotificationCenterProvider } from './context/NotificationCenterContext';
 import { ReportingProvider } from './context/ReportingContext';
 import { AdminProvider } from './context/AdminContext';
+import { QAProvider } from './context/QAContext';
 
 
 
@@ -89,6 +90,7 @@ const SecurityCenterPage = lazy(() => import('./pages/admin/SecurityCenterPage')
 const SystemSettingsPage = lazy(() => import('./pages/admin/SystemSettingsPage'));
 const CacheManagementPage = lazy(() => import('./pages/admin/CacheManagementPage'));
 const ErrorMonitoringPage = lazy(() => import('./pages/admin/ErrorMonitoringPage'));
+const QaDashboardPage = lazy(() => import('./pages/admin/QaDashboardPage'));
 
 
 const AiConsolePage = lazy(() => import('./pages/dashboards/AiConsolePage'));
@@ -127,6 +129,7 @@ export const App: React.FC = () => {
                   <ForecastProvider>
                   <AIProvider>
                     <AdminProvider>
+                    <QAProvider>
                     <BrowserRouter>
                       <Suspense
                         fallback={
@@ -256,6 +259,7 @@ export const App: React.FC = () => {
                               <Route path="cache" element={<CacheManagementPage />} />
                               <Route path="errors" element={<ErrorMonitoringPage />} />
                               <Route path="settings" element={<SystemSettingsPage />} />
+                              <Route path="qa" element={<QaDashboardPage />} />
 
                             </Route>
 
@@ -265,6 +269,7 @@ export const App: React.FC = () => {
                         </Routes>
                       </Suspense>
                     </BrowserRouter>
+                    </QAProvider>
                     </AdminProvider>
                   </AIProvider>
                   </ForecastProvider>

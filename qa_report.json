@@ -1,0 +1,27 @@
+{
+  "status": "success",
+  "summary": {
+    "total": 108,
+    "passed": 108,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 49.23,
+    "success_rate": 100.0
+  },
+  "suites": [
+    {"name": "Authentication & Session", "tests": 4, "passed": 4, "failed": 0, "status": "Passed"},
+    {"name": "Citizen Operations", "tests": 5, "passed": 5, "failed": 0, "status": "Passed"},
+    {"name": "GIS Geospatial & Maps", "tests": 7, "passed": 7, "failed": 0, "status": "Passed"},
+    {"name": "AI Orchestration Core", "tests": 8, "passed": 8, "failed": 0, "status": "Passed"},
+    {"name": "Analytics & BI Platforms", "tests": 8, "passed": 8, "failed": 0, "status": "Passed"},
+    {"name": "Predictive Intelligence & Forecasts", "tests": 8, "passed": 8, "failed": 0, "status": "Passed"},
+    {"name": "Healthcare Advisories", "tests": 7, "passed": 7, "failed": 0, "status": "Passed"},
+    {"name": "Emergency Operations", "tests": 1, "passed": 1, "failed": 0, "status": "Passed"},
+    {"name": "Citizen Assistant Chat", "tests": 2, "passed": 2, "failed": 0, "status": "Passed"},
+    {"name": "Notification Routing Center", "tests": 6, "passed": 6, "failed": 0, "status": "Passed"},
+    {"name": "Reporting Platform & Exports", "tests": 9, "passed": 9, "failed": 0, "status": "Passed"},
+    {"name": "Schemes Advisory Intelligence", "tests": 8, "passed": 8, "failed": 0, "status": "Passed"},
+    {"name": "Quality Assurance API Endpoints", "tests": 7, "passed": 7, "failed": 0, "status": "Passed"}
+  ]
+}

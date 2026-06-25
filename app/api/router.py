@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api import auth, user, citizen, government, issues, map, ai, emergency_api, health, schemes_api, analytics_api, forecast_api, notification_api, reporting_api, system
+from app.api import auth, user, citizen, government, issues, map, ai, emergency_api, health, schemes_api, analytics_api, forecast_api, notification_api, reporting_api, system, qa
 
 api_router = APIRouter()
 
@@ -19,6 +19,8 @@ api_router.include_router(forecast_api.router)
 api_router.include_router(notification_api.router)
 api_router.include_router(reporting_api.router)
 api_router.include_router(system.router)
+api_router.include_router(qa.router)
+
 
 
 

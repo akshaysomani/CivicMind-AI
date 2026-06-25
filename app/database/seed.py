@@ -100,7 +100,7 @@ async def seed_db(session: AsyncSession):
     gov_result = await session.execute(select(User).where(User.role.in_(["Government", "Admin"])))
     gov_users = gov_result.scalars().all()
     if not gov_users:
-        hashed_password = security.get_password_hash("securepassword123")
+        hashed_password = security.get_password_hash("StrongPass@123")
         gov_users = [
             User(
                 first_name="John",

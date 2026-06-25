@@ -49,7 +49,7 @@ def auth_headers():
         "last_name": "Tester",
         "email": "report.test@example.com",
         "phone": "+1555987654",
-        "password": "securepassword123",
+        "password": "StrongPass@123",
         "role": "Government",
         "city": "San Francisco",
         "state": "California",
@@ -60,7 +60,7 @@ def auth_headers():
     # Login to get token
     payload_login = {
         "email": "report.test@example.com",
-        "password": "securepassword123"
+        "password": "StrongPass@123"
     }
     response_login = client.post("/api/v1/auth/login", json=payload_login)
     token = response_login.json()["access_token"]

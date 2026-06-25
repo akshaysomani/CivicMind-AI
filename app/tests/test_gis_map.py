@@ -11,9 +11,10 @@ from app.models.gis import Ward, AdminBoundary
 from app.models.report import Report
 from app.models.user import User
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
+from app.core import security
 
 TEST_DB_URL = "sqlite+aiosqlite:///./test_civicmind_gis.db"
 engine_test = create_async_engine(TEST_DB_URL, echo=False)
@@ -23,32 +24,42 @@ async def override_get_db():
     async with TestSessionLocal() as session:
         yield session
 
-app.dependency_overrides[get_db] = override_get_db
-
 @pytest_asyncio.fixture(autouse=True, scope="module")
 async def setup_db():
+    app.dependency_overrides[get_db] = override_get_db
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
     async with engine_test.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+    app.dependency_overrides.clear()
+
 
 
 @pytest_asyncio.fixture(scope="module")
 async def citizen_auth():
     """Register and log in a citizen user, return access token headers."""
+    async with TestSessionLocal() as session:
+        user_res = await session.execute(select(User).where(User.email == "gis.citizen@civicmind.com"))
+        user = user_res.scalars().first()
+        if not user:
+            user = User(
+                first_name="Gis",
+                last_name="Citizen",
+                email="gis.citizen@civicmind.com",
+                phone="9999999901",
+                password_hash=security.get_password_hash("StrongPass@123"),
+                city="San Francisco",
+                state="California",
+                country="USA",
+                role="Citizen",
+                email_verified=True,
+                account_status="active"
+            )
+            session.add(user)
+            await session.commit()
+            
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        await client.post("/api/v1/auth/register", json={
-            "first_name": "Gis",
-            "last_name": "Citizen",
-            "email": "gis.citizen@civicmind.com",
-            "phone": "9999999901",
-            "password": "StrongPass@123",
-            "city": "San Francisco",
-            "state": "California",
-            "country": "USA",
-            "role": "Citizen",
-        })
         login_res = await client.post("/api/v1/auth/login", json={
             "email": "gis.citizen@civicmind.com",
             "password": "StrongPass@123",
@@ -61,18 +72,27 @@ async def citizen_auth():
 @pytest_asyncio.fixture(scope="module")
 async def gov_auth():
     """Register and log in a government user, return headers."""
+    async with TestSessionLocal() as session:
+        user_res = await session.execute(select(User).where(User.email == "gis.officer@civicmind.com"))
+        user = user_res.scalars().first()
+        if not user:
+            user = User(
+                first_name="Gis",
+                last_name="Officer",
+                email="gis.officer@civicmind.com",
+                phone="9999999902",
+                password_hash=security.get_password_hash("StrongPass@123"),
+                city="San Francisco",
+                state="California",
+                country="USA",
+                role="Government",
+                email_verified=True,
+                account_status="active"
+            )
+            session.add(user)
+            await session.commit()
+            
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        await client.post("/api/v1/auth/register", json={
-            "first_name": "Gis",
-            "last_name": "Officer",
-            "email": "gis.officer@civicmind.com",
-            "phone": "9999999902",
-            "password": "StrongPass@123",
-            "city": "San Francisco",
-            "state": "California",
-            "country": "USA",
-            "role": "Government",
-        })
         login_res = await client.post("/api/v1/auth/login", json={
             "email": "gis.officer@civicmind.com",
             "password": "StrongPass@123",
@@ -80,6 +100,7 @@ async def gov_auth():
         assert login_res.status_code == 200
         token = login_res.json()["access_token"]
         return {"Authorization": f"Bearer {token}"}
+
 
 
 # ── Tests for Spatial Utilities ──────────────────────────────────────────────
@@ -117,6 +138,7 @@ def test_haversine_distance():
 async def test_get_map_boundaries(citizen_auth):
     # Seed boundary first
     async with TestSessionLocal() as session:
+        await session.execute(delete(AdminBoundary))
         boundary = AdminBoundary(
             name="San Francisco Test City",
             boundary_type="City",
@@ -134,6 +156,7 @@ async def test_get_map_boundaries(citizen_auth):
         data = res.json()
         assert data["name"] == "San Francisco Test City"
         assert data["geojson_polygon"]["type"] == "Polygon"
+
 
 
 @pytest.mark.asyncio
