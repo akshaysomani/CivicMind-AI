@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNotifications } from './NotificationContext';
 
 export interface UserResponse {
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     setIsAuthenticating(false);
-  }, []);
+  }, [logout]);
 
   const login = async (email: string, password: string, rememberMe: boolean) => {
     setIsAuthenticating(true);
@@ -119,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       if (token) {
         await fetch(`${API_BASE}/auth/logout`, {
@@ -138,7 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sessionStorage.removeItem('user');
       showNotification('Successfully logged out.', 'info');
     }
-  };
+  }, [token, showNotification]);
 
   const updateProfile = async (profileData: any) => {
     if (!token) return;

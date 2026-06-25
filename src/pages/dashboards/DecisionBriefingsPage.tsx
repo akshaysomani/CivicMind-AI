@@ -15,7 +15,7 @@ export const DecisionBriefingsPage: React.FC = () => {
 
   useEffect(() => {
     fetchBriefings();
-  }, []);
+  }, [fetchBriefings]);
 
   const currentBrief = briefings.find(b => b.role === selectedRole);
 

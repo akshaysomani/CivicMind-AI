@@ -142,7 +142,7 @@ export const QAProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         refreshRelease(),
         refreshHealth()
       ]);
-    } catch (err: any) {
+    } catch {
       setError("Failed to fetch some QA configurations.");
     } finally {
       setLoading(false);

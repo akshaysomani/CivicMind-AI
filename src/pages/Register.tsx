@@ -89,7 +89,7 @@ export const Register: React.FC = () => {
     try {
       // Map roles to what backend expects
       const mappedRole = form.role === 'Government Officer' ? 'Government' : form.role;
-      const { confirmPassword, ...registerPayload } = form;
+      const { confirmPassword: _, ...registerPayload } = form;
       
       await register({
         ...registerPayload,

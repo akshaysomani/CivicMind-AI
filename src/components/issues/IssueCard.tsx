@@ -195,7 +195,7 @@ export const downloadIssueReceipt = (issue: Issue) => {
     <button class="print-btn" onclick="window.print()" style="margin-top:12px;padding:10px 24px;background:#2563eb;color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;">🖨️ Print / Save as PDF</button>
   </div>
 </div>
-<script>window.onload = function() { document.querySelector('.print-btn').scrollIntoView(); }<\/script>
+<script>window.onload = function() { document.querySelector('.print-btn').scrollIntoView(); }</script>
 </body>
 </html>`;
 

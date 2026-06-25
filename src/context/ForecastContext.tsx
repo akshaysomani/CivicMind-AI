@@ -93,7 +93,7 @@ export const ForecastProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       }, token);
       setSimulation(res);
       showNotification('Scenario simulation updated.', 'success');
-    } catch (e: any) {
+    } catch {
       showNotification('Failed to calculate simulated policy impacts.', 'error');
     } finally {
       setIsLoading(false);

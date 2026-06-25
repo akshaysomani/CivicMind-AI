@@ -126,7 +126,7 @@ export const HealthcarePage: React.FC = () => {
       await escalateMedicalEmergency(escalationForm);
       setIsEscalating(false);
       showNotification('Emergency ambulance request has been broadcast to disaster control.', 'success');
-    } catch (err) {
+    } catch {
       showNotification('Could not submit emergency request.', 'error');
     }
   };
