@@ -46,6 +46,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const { showNotification } = useNotifications();
 
+  const logout = useCallback(async () => {
+    try {
+      if (token) {
+        await fetch(`${API_BASE}/auth/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+      }
+    } catch (e) {
+      console.warn('Logout notification error:', e);
+    } finally {
+      setToken(null);
+      setCurrentUser(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      showNotification('Successfully logged out.', 'info');
+    }
+  }, [token, showNotification]);
+
   // Load persisted session on startup
   useEffect(() => {
     const savedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -119,26 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = useCallback(async () => {
-    try {
-      if (token) {
-        await fetch(`${API_BASE}/auth/logout`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-      }
-    } catch (e) {
-      console.warn('Logout notification error:', e);
-    } finally {
-      setToken(null);
-      setCurrentUser(null);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      sessionStorage.removeItem('token');
-      sessionStorage.removeItem('user');
-      showNotification('Successfully logged out.', 'info');
-    }
-  }, [token, showNotification]);
+
 
   const updateProfile = async (profileData: any) => {
     if (!token) return;
