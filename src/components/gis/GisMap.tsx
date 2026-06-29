@@ -74,7 +74,7 @@ export const GisMap: React.FC = () => {
     setMapProvider,
   } = useMap();
 
-  const defaultCenter: [number, number] = [28.6139, 77.2090]; // New Delhi, India
+  const defaultCenter: [number, number] = [37.7749, -122.4194]; // San Francisco, CA
 
   // Map box tile provider layer URLs
   const getTileLayerUrl = () => {
@@ -304,7 +304,7 @@ export const GisMap: React.FC = () => {
                   <div className="flex gap-2 pt-1.5 border-t border-white/5">
                     <button
                       onClick={() => startRouting([issue.latitude, issue.longitude])}
-                      className="flex-1 py-1.5 bg-primary rounded-lg text-center text-[10px] font-bold text-white hover:bg-primary-light transition-all cursor-pointer"
+                      className="flex-1 py-1.5 bg-primary rounded-lg text-center text-[10px] font-bold text-text-on-primary hover:bg-primary-light transition-all cursor-pointer"
                     >
                       Directions
                     </button>

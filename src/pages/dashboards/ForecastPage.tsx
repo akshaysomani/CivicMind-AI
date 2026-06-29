@@ -277,7 +277,7 @@ export const ForecastPage: React.FC = () => {
                             ) : (
                               <button
                                 onClick={() => dispatchPreventiveAction(rec.id)}
-                                className="text-[10px] bg-primary text-white font-bold px-3 py-1 rounded hover:bg-primary-hover active:scale-95 transition-all"
+                                className="text-[10px] bg-primary text-text-on-primary font-bold px-3 py-1 rounded hover:bg-primary-hover active:scale-95 transition-all"
                               >
                                 Dispatch Action
                               </button>
@@ -431,7 +431,7 @@ export const ForecastPage: React.FC = () => {
 
                     <button
                       onClick={triggerLocalSimulation}
-                      className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-2.5 bg-primary hover:bg-primary-hover text-text-on-primary text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />
                       Run Simulation Impact

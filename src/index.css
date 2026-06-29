@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 @import "tailwindcss";
 
 /* =====================================================
@@ -13,18 +14,19 @@
 
 /* ========== DESIGN TOKENS ========== */
 @theme {
-  --font-sans: 'Inter', 'SF Pro Text', system-ui, sans-serif;
-  --font-heading: 'Poppins', 'SF Pro Display', sans-serif;
+  --font-sans: 'DM Sans', 'Inter', system-ui, sans-serif;
+  --font-heading: 'DM Serif Display', 'Poppins', serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-secondary: #06b6d4;
-  --color-secondary-dark: #0891b2;
-  --color-accent: #22c55e;
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+  --color-secondary: var(--secondary);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-accent: var(--accent);
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
+  --color-text-on-primary: var(--text-on-primary);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-slow: float 9s ease-in-out infinite;
@@ -51,8 +53,8 @@
   to { opacity: 1; }
 }
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.15); }
-  50% { box-shadow: 0 0 40px rgba(37, 99, 235, 0.35); }
+  0%, 100% { box-shadow: 0 0 20px rgba(74, 124, 116, 0.15); }
+  50% { box-shadow: 0 0 40px rgba(74, 124, 116, 0.35); }
 }
 
 /* =====================================================
@@ -62,32 +64,41 @@
 
 /* === DARK MODE (Default) === */
 html, html.dark {
+  /* Colors */
+  --primary: #FAFAF8;
+  --primary-dark: #E8E8E4;
+  --primary-light: #FFFFFF;
+  --secondary: #76A79F;
+  --secondary-dark: #4A7C74;
+  --accent: #2E6B5E;
+  --text-on-primary: #1A1A18;
+
   /* Backgrounds */
-  --bg-page: #0b1120;
-  --bg-surface: #0f172a;
-  --bg-card: rgba(15, 23, 42, 0.55);
-  --bg-card-hover: rgba(15, 23, 42, 0.75);
-  --bg-input: rgba(15, 23, 42, 0.6);
-  --bg-navbar: rgba(11, 17, 32, 0.85);
-  --bg-sidebar: rgba(11, 17, 32, 0.95);
+  --bg-page: #121210;
+  --bg-surface: #1A1A18;
+  --bg-card: rgba(26, 26, 24, 0.6);
+  --bg-card-hover: rgba(26, 26, 24, 0.85);
+  --bg-input: rgba(26, 26, 24, 0.8);
+  --bg-navbar: rgba(18, 18, 16, 0.85);
+  --bg-sidebar: rgba(18, 18, 16, 0.95);
   --bg-muted: rgba(255, 255, 255, 0.04);
-  --bg-hover: rgba(255, 255, 255, 0.05);
+  --bg-hover: rgba(255, 255, 255, 0.06);
 
   /* Text */
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-heading: #ffffff;
-  --text-accent: #3b82f6;
+  --text-primary: #FAFAF8;
+  --text-secondary: #ABABAB;
+  --text-muted: #6B6B66;
+  --text-heading: #FAFAF8;
+  --text-accent: #76A79F;
 
   /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
+  --border-strong: rgba(255, 255, 255, 0.20);
 
   /* Shadows */
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
 
   /* Status */
   color-scheme: dark;
@@ -95,32 +106,41 @@ html, html.dark {
 
 /* === LIGHT MODE === */
 html.light {
+  /* Colors */
+  --primary: #1A1A18;
+  --primary-dark: #121210;
+  --primary-light: #333330;
+  --secondary: #4A7C74;
+  --secondary-dark: #2E6B5E;
+  --accent: #2E6B5E;
+  --text-on-primary: #FAFAF8;
+
   /* Backgrounds */
-  --bg-page: #f0f4ff;
-  --bg-surface: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.80);
-  --bg-card-hover: rgba(255, 255, 255, 0.95);
-  --bg-input: rgba(248, 250, 252, 0.95);
-  --bg-navbar: rgba(255, 255, 255, 0.90);
-  --bg-sidebar: rgba(255, 255, 255, 0.98);
-  --bg-muted: rgba(0, 0, 0, 0.03);
-  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-page: #FAFAF8;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAFAF8;
+  --bg-input: #FAFAF8;
+  --bg-navbar: rgba(250, 250, 248, 0.85);
+  --bg-sidebar: #FAFAF8;
+  --bg-muted: #F0EFEB;
+  --bg-hover: #E8E8E4;
 
   /* Text */
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  --text-heading: #0f172a;
-  --text-accent: #2563eb;
+  --text-primary: #1A1A18;
+  --text-secondary: #6B6B66;
+  --text-muted: #ABABAB;
+  --text-heading: #1A1A18;
+  --text-accent: #4A7C74;
 
   /* Borders */
-  --border-subtle: rgba(0, 0, 0, 0.07);
-  --border-default: rgba(0, 0, 0, 0.11);
-  --border-strong: rgba(0, 0, 0, 0.20);
+  --border-subtle: #F0EFEB;
+  --border-default: #E8E8E4;
+  --border-strong: #D8D8D4;
 
   /* Shadows */
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 4px 14px rgba(26, 26, 24, 0.04);
+  --shadow-lg: 0 12px 36px rgba(26, 26, 24, 0.08);
 
   /* Status */
   color-scheme: light;
@@ -336,18 +356,18 @@ html.light {
 .gradient-mesh {
   background-color: var(--bg-page);
   background-image:
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 55%),
-    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.14) 0px, transparent 55%),
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.10) 0px, transparent 55%),
-    radial-gradient(at 0% 100%, rgba(34, 197, 94, 0.06) 0px, transparent 45%);
+    radial-gradient(at 0% 0%, rgba(74, 124, 116, 0.15) 0px, transparent 55%),
+    radial-gradient(at 50% 0%, rgba(46, 107, 94, 0.10) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(118, 167, 159, 0.08) 0px, transparent 55%),
+    radial-gradient(at 0% 100%, rgba(46, 107, 94, 0.04) 0px, transparent 45%);
 }
 
 .gradient-mesh-light {
-  background-color: #eef2ff;
+  background-color: #FAFAF8;
   background-image:
-    radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.10) 0px, transparent 55%),
-    radial-gradient(at 50% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 55%),
-    radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.06) 0px, transparent 55%);
+    radial-gradient(at 0% 0%, rgba(74, 124, 116, 0.08) 0px, transparent 55%),
+    radial-gradient(at 50% 0%, rgba(46, 107, 94, 0.05) 0px, transparent 55%),
+    radial-gradient(at 100% 0%, rgba(118, 167, 159, 0.04) 0px, transparent 55%);
 }
 
 /* =====================================================
@@ -360,23 +380,25 @@ html.light .landing-section {
 /* Hero section in light mode: fix white text */
 html.light section h1,
 html.light section h2 {
-  color: #0f172a !important;
+  color: #1A1A18 !important;
 }
 
 html.light section p {
-  color: #475569 !important;
+  color: #6B6B66 !important;
 }
 
 /* =====================================================
    PREMIUM INTERACTIVE ELEMENTS
    ===================================================== */
 .btn-primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
-  @apply font-bold rounded-xl transition-all duration-200 text-white;
+  background: var(--primary);
+  color: var(--text-on-primary);
+  box-shadow: 0 4px 14px rgba(26, 26, 24, 0.12);
+  @apply font-bold rounded-xl transition-all duration-200;
 }
 .btn-primary:hover {
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  background: var(--primary-dark);
+  box-shadow: 0 6px 20px rgba(26, 26, 24, 0.18);
   transform: translateY(-1px);
 }
 
@@ -387,8 +409,8 @@ html.light section p {
   @apply relative rounded-2xl p-5 overflow-hidden;
 }
 .metric-card:hover {
-  border-color: rgba(37, 99, 235, 0.3);
-  box-shadow: 0 0 30px rgba(37, 99, 235, 0.08);
+  border-color: rgba(74, 124, 116, 0.3);
+  box-shadow: 0 0 30px rgba(74, 124, 116, 0.08);
   transform: translateY(-2px);
 }
 .metric-card::after {
@@ -396,7 +418,7 @@ html.light section p {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  background: linear-gradient(90deg, var(--secondary-dark), var(--secondary));
   opacity: 0;
   transition: opacity 0.25s ease;
 }
@@ -424,14 +446,14 @@ html.light section p {
   color: var(--text-secondary);
 }
 .nav-item:hover {
-  background: rgba(37, 99, 235, 0.08);
+  background: rgba(74, 124, 116, 0.10);
   color: var(--text-primary);
 }
 .nav-item.active {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(6, 182, 212, 0.7));
-  color: white;
+  background: var(--primary);
+  color: var(--text-on-primary);
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 12px rgba(26, 26, 24, 0.15);
 }
 
 /* =====================================================
@@ -441,19 +463,44 @@ html.light section p {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 10px; border-radius: 9999px;
   font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-  background: rgba(37, 99, 235, 0.12); color: #60a5fa;
-  border: 1px solid rgba(37, 99, 235, 0.25);
+  background: rgba(74, 124, 116, 0.12); color: #76A79F;
+  border: 1px solid rgba(74, 124, 116, 0.25);
 }
-html.light .badge-primary { background: rgba(37,99,235,0.10); color: #1d4ed8; }
+html.light .badge-primary {
+  background: #E8F4F1;
+  color: #2E6B5E;
+  border: 1px solid rgba(46, 107, 94, 0.15);
+}
 
-.badge-success { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-html.light .badge-success { color: #16a34a; }
+.badge-success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+html.light .badge-success {
+  color: #16a34a;
+  background: rgba(34, 197, 94, 0.08);
+}
 
-.badge-warning { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-html.light .badge-warning { color: #d97706; }
+.badge-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+html.light .badge-warning {
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.08);
+}
 
-.badge-danger { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
-html.light .badge-danger { color: #dc2626; }
+.badge-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+html.light .badge-danger {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.08);
+}
 
 /* =====================================================
    FORM ELEMENTS

@@ -58,9 +58,9 @@ export const AnalyticsDashboardPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'kpis' | 'trends' | 'insights' | 'decisions' | 'scorecards' | 'gis'>('kpis');
   const navigate = useNavigate();
-  // Default center: New Delhi, India
-  const mapCenter: [number, number] = [28.6139, 77.2090];
-  const mapZoom = 11;
+  // Default center: San Francisco, CA
+  const mapCenter: [number, number] = [37.7749, -122.4194];
+  const mapZoom = 12;
 
   // Dynamic colors for index metrics
   const getScoreColor = (val: number) => {
@@ -103,12 +103,12 @@ export const AnalyticsDashboardPage: React.FC = () => {
     { subject: 'Readiness', A: dashboardIndex.emergency_readiness_score, fullMark: 100 }
   ] : [];
 
-  // GIS coordinates lists — India-centered locations
+  // GIS coordinates lists — San Francisco locations
   const emergencyHotspots = [
-    { id: 1, name: 'Water Pipe Leakage', type: 'Infrastructure', lat: 28.6280, lng: 77.2090, ward: 'Ward 4 - Chandni Chowk', severity: 'Medium' },
-    { id: 2, name: 'Main Road Blockage', type: 'Zoning & Roads', lat: 28.5355, lng: 77.3910, ward: 'Ward 2 - Noida Border', severity: 'High' },
-    { id: 3, name: 'Fire Incident Alarm', type: 'Emergency', lat: 28.6692, lng: 77.2370, ward: 'Ward 8 - Civil Lines', severity: 'Critical' },
-    { id: 4, name: 'Sewage Line Anomaly', type: 'Sanitation', lat: 28.6129, lng: 77.2295, ward: 'Ward 12 - Connaught Place', severity: 'High' }
+    { id: 1, name: 'Water Pipe Leakage', type: 'Infrastructure', lat: 37.7510, lng: -122.4760, ward: 'Ward 5 - Sunset', severity: 'Medium' },
+    { id: 2, name: 'Main Road Blockage', type: 'Zoning & Roads', lat: 37.7785, lng: -122.4820, ward: 'Ward 1 - Richmond', severity: 'High' },
+    { id: 3, name: 'Fire Incident Alarm', type: 'Emergency', lat: 37.8035, lng: -122.4371, ward: 'Ward 2 - Marina', severity: 'Critical' },
+    { id: 4, name: 'Sewage Line Anomaly', type: 'Sanitation', lat: 37.7610, lng: -122.4162, ward: 'Ward 4 - Mission', severity: 'High' }
   ];
 
   return (
@@ -449,7 +449,7 @@ export const AnalyticsDashboardPage: React.FC = () => {
                         ) : (
                           <button
                             onClick={() => implementRecommendation(rec.id)}
-                            className="w-full py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                            className="w-full py-2 bg-primary hover:bg-primary-hover text-text-on-primary text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center justify-center gap-1.5"
                           >
                             🚀 Trigger Policy Action
                           </button>

@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { usePresentation } from '../context/PresentationContext';
-import { Sun, Moon, Menu, X, Landmark, User, LogOut, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Sun, Moon, Menu, X, User, LogOut, LayoutDashboard, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../components/Button';
 
@@ -41,12 +41,17 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 w-full z-40 transition-colors duration-200 glass-navbar dark:glass-navbar light:glass-navbar-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white shadow-md shadow-primary/20 group-hover:scale-105 transition-transform duration-200">
-            <Landmark className="w-5 h-5" />
+        <Link to="/" className="flex items-center gap-2.5 group text-decoration-none">
+          <div className="w-[28px] h-[28px] bg-slate-900 dark:bg-white rounded-[6px] flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="2" y="2" width="4" height="4" fill="currentColor" className="text-white dark:text-slate-900" opacity="0.9"/>
+              <rect x="8" y="2" width="4" height="4" fill="currentColor" className="text-white dark:text-slate-900" opacity="0.5"/>
+              <rect x="2" y="8" width="4" height="4" fill="currentColor" className="text-white dark:text-slate-900" opacity="0.5"/>
+              <rect x="8" y="8" width="4" height="4" fill="currentColor" className="text-white dark:text-slate-900" opacity="0.9"/>
+            </svg>
           </div>
-          <span className="font-heading font-extrabold text-xl tracking-tight text-slate-900 dark:text-slate-100">
-            Civic<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Mind</span> AI
+          <span className="font-sans font-semibold text-[15px] tracking-[-0.2px] text-slate-900 dark:text-slate-100">
+            CivicMind AI
           </span>
         </Link>
 
@@ -57,10 +62,10 @@ export const Navbar: React.FC = () => {
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-semibold transition-colors duration-200 hover:text-primary ${
+                `text-sm transition-colors duration-200 hover:text-primary ${
                   isActive
-                    ? 'text-primary font-bold border-b-2 border-primary pb-1'
-                    : 'text-slate-650 dark:text-slate-350 hover:text-slate-900 dark:hover:text-slate-100'
+                    ? 'text-primary font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                 }`
               }
             >
@@ -72,10 +77,10 @@ export const Navbar: React.FC = () => {
             <NavLink
               to={getDashboardPath()}
               className={({ isActive }) =>
-                `text-sm font-semibold transition-colors duration-200 hover:text-primary flex items-center gap-1.5 ${
+                `text-sm transition-colors duration-200 hover:text-primary flex items-center gap-1.5 ${
                   isActive
-                    ? 'text-primary font-bold border-b-2 border-primary pb-1'
-                    : 'text-slate-650 dark:text-slate-350 hover:text-slate-900 dark:hover:text-slate-100'
+                    ? 'text-primary font-semibold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                 }`
               }
             >

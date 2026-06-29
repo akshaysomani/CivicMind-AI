@@ -1,14 +1,9 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import {
-  Users, BrainCircuit, FileSpreadsheet, Clock, ArrowRight,
-  Sparkles, Bell, BarChart3, Bot, Activity,
-  CheckCircle, MapPin, Zap, Globe
-} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import { useApp } from '../context/AppContext';
-
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -19,44 +14,6 @@ const fadeUp: Variants = {
   },
 };
 
-const StatCard = ({ icon, value, label, suffix = '', prefix = '' }: any) => (
-  <motion.div
-    variants={fadeUp}
-    whileHover={{ y: -4, scale: 1.02 }}
-    className="relative group p-6 rounded-2xl border border-white/8 bg-slate-900/50 backdrop-blur-sm overflow-hidden"
-  >
-    <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-    <div className="flex items-start justify-between mb-4">
-      <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/15 text-primary">
-        {icon}
-      </div>
-    </div>
-    <div className="text-3xl font-extrabold font-heading text-slate-900 dark:text-white mb-1 tracking-tight">
-      {prefix}{typeof value === 'number' ? value.toLocaleString() : value}{suffix}
-    </div>
-    <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">{label}</div>
-  </motion.div>
-);
-
-const FeatureCard = ({ icon, title, desc, color }: any) => (
-  <motion.div
-    variants={fadeUp}
-    whileHover={{ y: -5 }}
-    className="group relative p-6 rounded-2xl bg-slate-900/40 border border-white/6 hover:border-white/12 backdrop-blur-sm transition-all duration-300 overflow-hidden"
-  >
-    <div className="absolute inset-0 bg-gradient-to-br from-transparent to-transparent group-hover:from-primary/3 transition-all duration-500" />
-    <div className={`relative mb-5 inline-flex p-3 rounded-xl ${color} border`}>
-      {icon}
-    </div>
-    <h3 className="relative text-lg font-bold font-heading text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors duration-300">
-      {title}
-    </h3>
-    <p className="relative text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-      {desc}
-    </p>
-  </motion.div>
-);
-
 export const Landing: React.FC = () => {
   const navigate = useNavigate();
   const { stats } = useApp();
@@ -65,329 +22,448 @@ export const Landing: React.FC = () => {
     navigate('/login');
   };
 
-  const features = [
-    {
-      icon: <BrainCircuit className="w-5 h-5 text-blue-400" />,
-      title: 'Multi-Agent AI Core',
-      desc: 'Intelligent agent network automatically categorizes, routes, and resolves community complaints using LLM coordination.',
-      color: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-    },
-    {
-      icon: <Bell className="w-5 h-5 text-rose-400" />,
-      title: 'Smart Emergency Alerts',
-      desc: 'Real-time safety risk analytics map local hazards to critical warnings before they escalate.',
-      color: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
-    },
-    {
-      icon: <BarChart3 className="w-5 h-5 text-violet-400" />,
-      title: 'Government Analytics',
-      desc: 'Track service times, resolution rates, and infrastructure bottlenecks on rich spatial dashboards.',
-      color: 'bg-violet-500/10 border-violet-500/20 text-violet-400',
-    },
-    {
-      icon: <Bot className="w-5 h-5 text-cyan-400" />,
-      title: 'AI Citizen Assistant',
-      desc: 'Conversational assistant powered by Gemini AI — explains city documents, recommends resources, answers questions.',
-      color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-400',
-    },
-    {
-      icon: <MapPin className="w-5 h-5 text-emerald-400" />,
-      title: 'GIS Interactive Maps',
-      desc: 'Live geospatial maps with ward boundaries, issue heatmaps, and route dispatching to field teams.',
-      color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
-    },
-    {
-      icon: <Activity className="w-5 h-5 text-amber-400" />,
-      title: 'Predictive Insights',
-      desc: 'Identify infrastructure deterioration, traffic trends, and at-risk zones before they become crises.',
-      color: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
-    },
-  ];
-
-  const steps = [
-    { number: '01', title: 'Citizens Report Issues', desc: 'Submit via AI-guided form with photos, GPS, and category tagging.' },
-    { number: '02', title: 'AI Agents Analyze', desc: 'Multi-agent network classifies severity, routes to department, and notifies stakeholders.' },
-    { number: '03', title: 'Government Responds', desc: 'Officers receive dispatch, update status in real-time, citizens get automated SMS/app updates.' },
-    { number: '04', title: 'Data Drives Policy', desc: 'Executive dashboards surface patterns for city leaders to make evidence-based budget decisions.' },
-  ];
-
-  const trustedBy = ['Municipal Corporation', 'State Government', 'NGO Alliance', 'Smart City Mission', 'Urban Development'];
+  const handleFileGrievance = () => {
+    navigate('/login'); // Redirects to login/auth flow before filing
+  };
 
   return (
-    <div className="relative overflow-hidden">
-
+    <div className="relative overflow-hidden w-full max-w-full">
       {/* ============ HERO SECTION ============ */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 py-24">
-        {/* Decorative background orbs */}
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute top-1/3 -right-24 w-80 h-80 rounded-full bg-secondary/8 blur-3xl" />
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-64 bg-gradient-to-t from-primary/5 to-transparent" />
-          {/* Grid pattern */}
-          <div className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-              backgroundSize: '60px 60px'
-            }}
-          />
-        </div>
-
+      <section className="py-20 px-4 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start border-b border-border-default">
         <motion.div
           initial="hidden"
           animate="visible"
-          className="max-w-4xl mx-auto space-y-8"
+          variants={fadeUp}
+          className="space-y-8"
         >
-          {/* Badge */}
-          <motion.div custom={0} variants={fadeUp} className="inline-flex">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest bg-primary/10 text-primary border border-primary/20">
-              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-              India's Premier Civic AI Platform
-            </span>
-          </motion.div>
-
-          {/* Heading */}
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl sm:text-6xl md:text-7xl font-extrabold font-heading tracking-tight text-slate-900 dark:text-white leading-[1.05]"
-          >
-            Smarter Cities Start with
-            <br />
-            <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 bg-clip-text text-transparent">
-              CivicMind AI
-            </span>
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
-            variants={fadeUp}
-            className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
-          >
-            Connect citizens with government. Turn complaints into action.
-            Build a transparent, data-driven city with multi-agent AI working 24/7 for your community.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            custom={0.3}
-            variants={fadeUp}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
-          >
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-text-secondary uppercase tracking-widest">
+            <span className="w-5 h-[1px] bg-text-secondary"></span>
+            Citizen engagement platform
+          </div>
+          <h1 className="font-heading font-normal text-5xl md:text-6xl text-text-primary tracking-tight leading-[1.08]">
+            Your complaint.<br />
+            <em className="text-secondary font-heading italic not-italic">Heard. Tracked.<br />Resolved.</em>
+          </h1>
+          <p className="text-base text-text-secondary max-w-md leading-relaxed font-normal">
+            CivicMind AI connects citizens with local governments — routing grievances to the right department, tracking every step, and measuring accountability in the open.
+          </p>
+          <div className="flex flex-wrap items-center gap-4 pt-4">
             <button
-              onClick={handleGetStarted}
-              className="group flex items-center gap-2.5 px-8 py-4 bg-primary hover:bg-primary-dark text-white font-bold text-sm rounded-2xl transition-all duration-200 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5"
+              onClick={handleFileGrievance}
+              className="btn-primary px-6 py-3.5 text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all duration-200"
             >
-              Get Started Free
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              Report an issue
+              <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => navigate('/features')}
-              className="flex items-center gap-2 px-8 py-4 border border-white/12 text-slate-300 hover:text-white hover:border-white/25 font-semibold text-sm rounded-2xl transition-all duration-200 hover:-translate-y-0.5 backdrop-blur-sm"
+              onClick={() => navigate('/about')}
+              className="px-6 py-3.5 border border-border-strong rounded-xl text-text-primary hover:border-text-primary text-sm font-medium transition-all cursor-pointer bg-transparent"
             >
-              Explore Features
+              See how it works
             </button>
-          </motion.div>
+          </div>
+        </motion.div>
 
-          {/* Social proof */}
-          <motion.div custom={0.4} variants={fadeUp} className="flex flex-wrap items-center justify-center gap-6 pt-4">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Free to use</span>
+        {/* Complaint Card Redesign mockup */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="w-full space-y-4"
+        >
+          <div className="bg-bg-surface border border-border-default rounded-xl overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-border-default flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-text-primary tracking-wide">GRV-2024-04817</span>
+                <span className="text-[11px] font-semibold text-emerald-850 dark:text-emerald-300 bg-emerald-500/10 dark:bg-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                  In progress
+                </span>
+              </div>
+              <span className="text-xs text-text-muted">2 hrs ago</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-              <span>No credit card needed</span>
+            <div className="p-5 space-y-4">
+              <div>
+                <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1">
+                  Roads & Infrastructure
+                </div>
+                <div className="text-base font-semibold text-text-primary mb-2">
+                  Large pothole blocking lane near school crossing
+                </div>
+                <div className="text-xs text-text-secondary flex items-center gap-1.5">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="shrink-0">
+                    <path d="M6 1C4.3 1 3 2.3 3 4C3 6.5 6 11 6 11C6 11 9 6.5 9 4C9 2.3 7.7 1 6 1Z" stroke="currentColor" className="text-text-muted" strokeWidth="1.2" />
+                    <circle cx="6" cy="4" r="1" fill="currentColor" className="text-text-muted" />
+                  </svg>
+                  Navrangpura, Ahmedabad — 380009
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="space-y-1.5 pt-2 border-t border-border-subtle">
+                <div className="flex justify-between text-xs text-text-muted">
+                  <span>Progress</span>
+                  <span className="font-semibold text-text-primary">68%</span>
+                </div>
+                <div className="h-1 bg-border-subtle rounded-full overflow-hidden">
+                  <div className="h-full bg-primary rounded-full" style={{ width: '68%' }} />
+                </div>
+              </div>
+
+              {/* Step indicator */}
+              <div className="grid grid-cols-4 gap-2 text-center pt-2 text-[10px]">
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rounded-full bg-primary mx-auto" />
+                  <span className="text-text-secondary font-medium block">Filed</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rounded-full bg-primary mx-auto" />
+                  <span className="text-text-secondary font-medium block">Classified</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rounded-full bg-secondary mx-auto" />
+                  <span className="text-secondary font-bold block">Assigned</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="w-2 h-2 rounded-full bg-border-strong mx-auto" />
+                  <span className="text-text-muted block">Resolved</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Trusted by 50+ municipalities</span>
+          </div>
+
+          {/* Mini Info Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-bg-surface border border-border-default rounded-xl p-4.5">
+              <div className="text-2xl font-semibold font-sans text-text-primary tracking-tight leading-none mb-1">
+                24,817
+              </div>
+              <div className="text-[11px] text-text-muted font-medium mb-2">Issues resolved this year</div>
+              <div className="text-[10px] font-semibold text-emerald-650 dark:text-emerald-400">↑ 31% vs last year</div>
             </div>
-          </motion.div>
+            <div className="bg-bg-surface border border-border-default rounded-xl p-4.5">
+              <div className="text-2xl font-semibold font-sans text-text-primary tracking-tight leading-none mb-1">
+                2.4 hrs
+              </div>
+              <div className="text-[11px] text-text-muted font-medium mb-2">Average response time</div>
+              <div className="text-[10px] font-semibold text-emerald-655 dark:text-emerald-400">↓ 38% improvement</div>
+            </div>
+          </div>
         </motion.div>
       </section>
 
-      {/* ============ STATS SECTION ============ */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="text-center mb-14"
-          >
-            <motion.span variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-slate-800/60 text-slate-400 border border-white/8 mb-4">
-              Platform Operations
-            </motion.span>
-            <motion.h2 variants={fadeUp} custom={0.1} className="text-3xl md:text-4xl font-extrabold text-white font-heading mb-3">
-              Trusted at Scale
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={0.2} className="text-slate-400 max-w-xl mx-auto">
-              Real-time metrics from communities actively using CivicMind AI to improve their cities.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-5"
-          >
-            <StatCard icon={<Users className="w-5 h-5" />} value={stats.communitiesConnected} label="Communities Connected" />
-            <StatCard icon={<BrainCircuit className="w-5 h-5" />} value={stats.aiDecisions} label="AI Decisions Made" suffix="+" />
-            <StatCard icon={<FileSpreadsheet className="w-5 h-5" />} value={stats.reportsGenerated} label="Reports Generated" />
-            <StatCard icon={<Clock className="w-5 h-5" />} value={42} label="Avg. Response Time" prefix="<" suffix=" min" />
-          </motion.div>
+      {/* ============ STATS STRIP SECTION ============ */}
+      <section className="grid grid-cols-2 md:grid-cols-4 border-b border-border-default bg-bg-surface/50">
+        <div className="p-8 border-r border-border-default flex flex-col justify-center">
+          <div className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight">
+            {stats.communitiesConnected || 12}
+          </div>
+          <div className="text-xs md:text-sm text-text-secondary mt-1">Cities currently live</div>
         </div>
-      </section>
-
-      {/* ============ HOW IT WORKS ============ */}
-      <section className="py-20 px-4 relative">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="p-8 border-r border-border-default flex flex-col justify-center">
+          <div className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight">
+            94%
+          </div>
+          <div className="text-xs md:text-sm text-text-secondary mt-1">AI classification accuracy</div>
         </div>
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <motion.span variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-slate-800/60 text-slate-400 border border-white/8 mb-4">
-              How It Works
-            </motion.span>
-            <motion.h2 variants={fadeUp} custom={0.1} className="text-3xl md:text-4xl font-extrabold text-white font-heading mb-3">
-              From Report to Resolution
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={0.2} className="text-slate-400 max-w-xl mx-auto">
-              Our AI pipeline ensures every citizen complaint reaches the right department and gets resolved — faster than ever before.
-            </motion.p>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {steps.map((step, i) => (
-              <motion.div
-                key={step.number}
-                variants={fadeUp}
-                custom={i * 0.1}
-                className="relative group"
-              >
-                {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-7 left-full w-full h-px bg-gradient-to-r from-primary/30 to-transparent z-10" />
-                )}
-                <div className="p-6 rounded-2xl bg-slate-900/40 border border-white/6 hover:border-primary/20 transition-all duration-300">
-                  <div className="text-4xl font-black font-heading text-primary/20 group-hover:text-primary/40 transition-colors mb-4 leading-none">
-                    {step.number}
-                  </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white mb-2 text-sm">{step.title}</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{step.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+        <div className="p-8 border-r md:border-r border-border-default flex flex-col justify-center">
+          <div className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight">
+            {(stats.aiDecisions ? (stats.aiDecisions / 100000).toFixed(2) + 'L' : '1.02L')}
+          </div>
+          <div className="text-xs md:text-sm text-text-secondary mt-1">Citizens registered</div>
+        </div>
+        <div className="p-8 flex flex-col justify-center">
+          <div className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight">
+            7
+          </div>
+          <div className="text-xs md:text-sm text-text-secondary mt-1">Languages supported</div>
         </div>
       </section>
 
       {/* ============ FEATURES SECTION ============ */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <motion.span variants={fadeUp} className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-widest bg-slate-800/60 text-slate-400 border border-white/8 mb-4">
-              Platform Features
-            </motion.span>
-            <motion.h2 variants={fadeUp} className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white font-heading mb-3">
-              Everything Your City Needs
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-              A comprehensive enterprise platform built for modern civic governance.
-            </motion.p>
-          </motion.div>
+      <section className="py-20 px-4 md:px-12 bg-bg-surface/10">
+        <div className="flex flex-wrap items-baseline gap-4 mb-12">
+          <span className="text-xs font-bold text-text-muted tracking-widest uppercase">01 — Features</span>
+          <h2 className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight leading-tight">
+            Built for real governance,<br className="hidden md:block" /> not just reports
+          </h2>
+        </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {features.map((feat, i) => (
-              <motion.div key={i} custom={i * 0.08} variants={fadeUp}>
-                <FeatureCard {...feat} />
-              </motion.div>
-            ))}
-          </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-border-default rounded-xl overflow-hidden bg-border-default">
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">01</div>
+            <h3 className="text-base font-semibold text-text-primary">Smart grievance filing</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              File via text, voice, or photo. AI reads your complaint and pre-fills category, department, and priority — no form-filling expertise needed.
+            </p>
+          </div>
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">02</div>
+            <h3 className="text-base font-semibold text-text-primary">Automatic classification</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Natural Language Processing routes each issue to the right department with an SLA assigned. Escalation is automatic when deadlines slip.
+            </p>
+          </div>
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">03</div>
+            <h3 className="text-base font-semibold text-text-primary">Live status tracking</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Every status change is timestamped and visible. Citizens see exactly where their complaint stands — no follow-up calls needed.
+            </p>
+          </div>
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">04</div>
+            <h3 className="text-base font-semibold text-text-primary">Governance analytics</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Heatmaps, resolution rates, and SLA compliance dashboards help officials spot patterns and manage workloads.
+            </p>
+          </div>
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">05</div>
+            <h3 className="text-base font-semibold text-text-primary">Multilingual interface</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              File in Hindi, Gujarati, Tamil, Telugu, Marathi, Bengali, or English. Responses arrive translated in the same language.
+            </p>
+          </div>
+          <div className="bg-bg-surface p-8 space-y-4 hover:bg-bg-card-hover transition-colors">
+            <div className="text-xs font-bold text-text-muted">06</div>
+            <h3 className="text-base font-semibold text-text-primary">Full audit trail</h3>
+            <p className="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Every action — who assigned, who updated, when — is logged and exportable. Accountability is built in, not bolted on.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ============ TRUSTED BY ============ */}
-      <section className="py-16 px-4 border-y border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-8">
-            Trusted by Government Bodies & Organizations
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            {trustedBy.map((org) => (
-              <div key={org} className="px-5 py-2.5 rounded-xl bg-slate-900/40 border border-white/6 text-xs font-semibold text-slate-400 flex items-center gap-2">
-                <Globe className="w-3.5 h-3.5 text-slate-600" />
-                {org}
+      {/* ============ PROCESS & LANGUAGES GRID ============ */}
+      <section className="py-20 px-4 md:px-12 bg-bg-surface border-y border-border-default">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <div className="flex flex-wrap items-baseline gap-4 mb-8">
+              <span className="text-xs font-bold text-text-muted tracking-widest uppercase">02 — Process</span>
+              <h2 className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight leading-tight">
+                From street to<br /><em className="text-secondary font-heading italic not-italic">resolution</em>
+              </h2>
+            </div>
+
+            <div className="divide-y divide-border-subtle">
+              <div className="py-4.5 flex gap-5">
+                <span className="text-xs md:text-sm font-bold text-text-muted w-6">1</span>
+                <div>
+                  <h4 className="text-sm md:text-base font-semibold text-text-primary mb-1">Citizen files an issue</h4>
+                  <p className="text-xs md:text-sm text-text-secondary">Via web, app, or WhatsApp. Text, voice note, or photo. Available in 7 languages, no account needed to start.</p>
+                </div>
               </div>
-            ))}
+              <div className="py-4.5 flex gap-5">
+                <span className="text-xs md:text-sm font-bold text-text-muted w-6">2</span>
+                <div>
+                  <h4 className="text-sm md:text-base font-semibold text-text-primary mb-1">AI classifies and routes</h4>
+                  <p className="text-xs md:text-sm text-text-secondary">Department, priority, and response deadline are assigned in under 3 seconds. No manual triage queue.</p>
+                </div>
+              </div>
+              <div className="py-4.5 flex gap-5">
+                <span className="text-xs md:text-sm font-bold text-text-muted w-6">3</span>
+                <div>
+                  <h4 className="text-sm md:text-base font-semibold text-text-primary mb-1">Officer takes ownership</h4>
+                  <p className="text-xs md:text-sm text-text-secondary">The assigned official receives a task with full context. Updates flow back to the citizen automatically.</p>
+                </div>
+              </div>
+              <div className="py-4.5 flex gap-5">
+                <span className="text-xs md:text-sm font-bold text-text-muted w-6">4</span>
+                <div>
+                  <h4 className="text-sm md:text-base font-semibold text-text-primary mb-1">Citizen confirms resolution</h4>
+                  <p className="text-xs md:text-sm text-text-secondary">Once marked resolved, the citizen verifies. Disputes trigger an escalation path — not a dead end.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Languages Aside Block */}
+          <div className="bg-slate-950 text-white rounded-xl p-8 shadow-md">
+            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-6">
+              Languages supported
+            </div>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Hindi</span>
+                  <span className="text-slate-500">38,400</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '100%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Gujarati</span>
+                  <span className="text-slate-500">27,600</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '72%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Tamil</span>
+                  <span className="text-slate-500">19,800</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '52%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Marathi</span>
+                  <span className="text-slate-500">16,900</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '44%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Telugu</span>
+                  <span className="text-slate-500">13,700</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '36%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">Bengali</span>
+                  <span className="text-slate-500">10,600</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '28%' }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between items-center text-xs mb-1.5">
+                  <span className="font-semibold text-slate-200">English</span>
+                  <span className="text-slate-500">7,840</span>
+                </div>
+                <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                  <div className="h-full bg-secondary rounded-full" style={{ width: '20%' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ TESTIMONIALS ============ */}
+      <section className="py-20 px-4 md:px-12 bg-bg-surface border-b border-border-default">
+        <div className="flex flex-wrap items-baseline gap-4 mb-12">
+          <span className="text-xs font-bold text-text-muted tracking-widest uppercase">03 — Trusted by</span>
+          <h2 className="font-heading font-normal text-3xl md:text-4xl text-text-primary tracking-tight leading-tight">
+            What people are saying
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-bg-surface border border-border-default rounded-xl p-6 flex flex-col justify-between">
+            <p className="text-xs md:text-sm font-medium text-text-primary italic leading-relaxed mb-6">
+              "Filed a complaint about a broken streetlight at 9 pm. By next morning it was assigned to the electrical department and fixed within two days. First time I actually saw my complaint go somewhere."
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-border-default flex items-center justify-center font-bold text-[11px] text-text-secondary shrink-0">
+                RK
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-text-primary">Rakesh Kumar</div>
+                <div className="text-[10px] text-text-muted">Resident, Surat</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-bg-surface border border-border-default rounded-xl p-6 flex flex-col justify-between">
+            <p className="text-xs md:text-sm font-medium text-text-primary italic leading-relaxed mb-6">
+              "The analytics dashboard changed how we manage our ward. We can see which categories spike, who is overloaded, and where SLAs are slipping — all in one place. We've cut average resolution time by 40%."
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-border-default flex items-center justify-center font-bold text-[11px] text-text-secondary shrink-0">
+                PS
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-text-primary">Priya Sharma</div>
+                <div className="text-[10px] text-text-muted">Deputy Commissioner, AMC</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-bg-surface border border-border-default rounded-xl p-6 flex flex-col justify-between">
+            <p className="text-xs md:text-sm font-medium text-text-primary italic leading-relaxed mb-6">
+              "I used to write letters and wait months. Now I file in Gujarati on my phone, get updates by SMS, and can escalate if nothing happens. It finally feels like someone is responsible."
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-border-default flex items-center justify-center font-bold text-[11px] text-text-secondary shrink-0">
+                MV
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-text-primary">Meena Vasava</div>
+                <div className="text-[10px] text-text-muted">Citizen, Ahmedabad</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============ BOTTOM CTA ============ */}
-      <section className="py-24 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="relative p-12 md:p-16 rounded-3xl overflow-hidden border border-primary/20"
-          >
-            {/* Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/5" />
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <section className="py-20 px-4 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 className="font-heading font-normal text-4xl md:text-5xl text-text-primary tracking-tight leading-[1.1] mb-6">
+            Ready to bring<br /><em className="text-secondary font-heading italic not-italic">accountability</em><br />to your city?
+          </h2>
+          <p className="text-sm md:text-base text-text-secondary leading-relaxed max-w-sm mb-8">
+            Whether you're a citizen with a complaint or a government body looking to deploy CivicMind — the path in is straightforward.
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              onClick={handleFileGrievance}
+              className="btn-primary px-6 py-3.5 text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all duration-200"
+            >
+              File a grievance
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleGetStarted}
+              className="px-6 py-3.5 border border-border-strong rounded-xl text-text-primary hover:border-text-primary text-sm font-medium transition-all cursor-pointer bg-transparent"
+            >
+              Request a city demo
+            </button>
+          </div>
+        </div>
 
-            <motion.div variants={fadeUp} className="relative space-y-6">
-              <div className="inline-flex items-center gap-2 p-3 rounded-2xl bg-primary/10 border border-primary/20 text-primary mb-2">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white font-heading">
-                Ready to Transform Your City?
-              </h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed">
-                Join hundreds of municipalities using CivicMind AI to deliver faster services,
-                better infrastructure, and transparent governance to their citizens.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                <button
-                  onClick={handleGetStarted}
-                  className="group flex items-center gap-2 px-8 py-4 bg-primary hover:bg-primary-dark text-white font-bold text-sm rounded-2xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/35 hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  Start for Free Today
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <Link
-                  to="/about"
-                  className="px-8 py-4 border border-white/12 hover:border-white/25 text-slate-300 hover:text-white font-semibold text-sm rounded-2xl hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  Learn More
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
+        <div className="space-y-3">
+          <div className="flex items-center gap-4 p-4.5 bg-bg-surface border border-border-default rounded-xl hover:border-border-strong transition-colors">
+            <div className="w-9 h-9 bg-border-subtle rounded-lg flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <h5 className="text-xs md:text-sm font-semibold text-text-primary mb-0.5">For citizens</h5>
+              <p className="text-[11px] text-text-muted">File, track, and escalate your complaint — no login required to start</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 p-4.5 bg-bg-surface border border-border-default rounded-xl hover:border-border-strong transition-colors">
+            <div className="w-9 h-9 bg-border-subtle rounded-lg flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="16"/><line x1="15" y1="22" x2="15" y2="16"/><line x1="12" y1="16" x2="12" y2="10"/><path d="M12 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+            </div>
+            <div>
+              <h5 className="text-xs md:text-sm font-semibold text-text-primary mb-0.5">For government bodies</h5>
+              <p className="text-[11px] text-text-muted">Deploy CivicMind in your municipality — setup takes under a week</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 p-4.5 bg-bg-surface border border-border-default rounded-xl hover:border-border-strong transition-colors">
+            <div className="w-9 h-9 bg-border-subtle rounded-lg flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div>
+              <h5 className="text-xs md:text-sm font-semibold text-text-primary mb-0.5">For administrators</h5>
+              <p className="text-[11px] text-text-muted">Full analytics, SLA tracking, and department management tools</p>
+            </div>
+          </div>
         </div>
       </section>
-
     </div>
   );
 };
+
 export default Landing;
