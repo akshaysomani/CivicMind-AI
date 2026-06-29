@@ -132,7 +132,7 @@ export const App: React.FC = () => {
                   <AIProvider>
                     <AdminProvider>
                      <QAProvider>
-                     <BrowserRouter>
+                      <BrowserRouter basename={import.meta.env.BASE_URL}>
                        <PresentationProvider>
                          <PresentationTour />
                          <Suspense
