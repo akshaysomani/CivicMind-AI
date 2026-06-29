@@ -333,14 +333,14 @@ const IssueDetailPage: React.FC = () => {
               {issue.attachments.map(att => (
                 <a
                   key={att.id}
-                  href={`http://localhost:8000${att.file_path}`}
+                  href={`http://127.0.0.1:8000${att.file_path}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-xl overflow-hidden border border-slate-700 bg-slate-900/60 hover:border-blue-500 transition-all group"
                 >
                   {att.file_type === 'image' ? (
                     <img
-                      src={`http://localhost:8000${att.file_path}`}
+                      src={`http://127.0.0.1:8000${att.file_path}`}
                       alt={att.original_name}
                       className="w-full h-24 object-cover group-hover:opacity-90 transition-opacity"
                     />

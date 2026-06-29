@@ -93,7 +93,7 @@ export interface QAHealth {
   };
 }
 
-const API_BASE = "http://localhost:8000/api/v1/qa";
+const API_BASE = "http://127.0.0.1:8000/api/v1/qa";
 
 async function fetchQAAPI(endpoint: string, method: string = "GET", body?: any): Promise<any> {
   const token = localStorage.getItem("token");
