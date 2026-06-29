@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 // Providers
 import { ThemeProvider } from './context/ThemeContext';
@@ -132,7 +132,7 @@ export const App: React.FC = () => {
                   <AIProvider>
                     <AdminProvider>
                      <QAProvider>
-                      <BrowserRouter basename={import.meta.env.BASE_URL}>
+                      <HashRouter>
                        <PresentationProvider>
                          <PresentationTour />
                          <Suspense
@@ -273,7 +273,7 @@ export const App: React.FC = () => {
                         </Routes>
                        </Suspense>
                      </PresentationProvider>
-                     </BrowserRouter>
+                      </HashRouter>
                      </QAProvider>
                     </AdminProvider>
                   </AIProvider>
