@@ -28,7 +28,7 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const API_ROOT = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1';
+  const API_ROOT = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
   // If absolute path is set on backend, resolve it, otherwise fallback to template initials
   const avatarUrl = currentUser.profile_image
     ? `${API_ROOT.replace('/api/v1', '')}${currentUser.profile_image}`
