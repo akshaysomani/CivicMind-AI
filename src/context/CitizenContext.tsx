@@ -156,7 +156,33 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (savedRes.ok) setSavedReports(await savedRes.json());
       
     } catch (error) {
-      console.error('Failed to load citizen dashboard data', error);
+      console.warn('Backend offline — loading offline demo data for citizen dashboard.', error);
+      // Offline Demo Fallback: populate with mock data so the dashboard is interactive
+      setStats({ issues_reported: 8, resolved_issues: 5, pending_issues: 3, nearby_alerts: 4, ai_insights: 12, participation_score: 78 });
+      setAlerts([
+        { id: 1, title: 'Road Closure: Main Street Pipeline Maintenance', message: 'Water pipeline repair on Main St. Road blocked between 4th Ave and 7th Ave.', severity: 'Medium', location: 'Main St & 5th Ave', city: 'San Francisco', state: 'California', distance: '0.4 miles', alert_type: 'Road Closure', status: 'Active', created_at: new Date().toISOString() },
+        { id: 2, title: 'Flood Warning: Bay Area Shoreline', message: 'High tide and heavy rainfall may cause localized coastal flooding.', severity: 'High', location: 'Bay Area Shoreline', city: 'San Francisco', state: 'California', distance: '1.8 miles', alert_type: 'Flood', status: 'Active', created_at: new Date().toISOString() },
+        { id: 3, title: 'Power Outage: Grid Sector 4B', message: 'Scheduled transformer upgrades. Outage expected to resolve by 6 PM.', severity: 'Medium', location: 'District 4', city: 'San Francisco', state: 'California', distance: '2.1 miles', alert_type: 'Power Outage', status: 'Active', created_at: new Date().toISOString() },
+      ]);
+      setNotifications([
+        { id: 1, user_id: 1, title: 'Report Update', message: 'Your report "Clogged Storm Drain" has been assigned to the Water Supply dept.', type: 'gov_message', is_read: false, created_at: new Date().toISOString() },
+        { id: 2, user_id: 1, title: 'New Alert', message: 'A new flood warning has been issued for your area.', type: 'emergency', is_read: false, created_at: new Date().toISOString() },
+      ]);
+      setAchievements([
+        { id: 'first_report', title: 'First Reporter', description: 'Submit your first issue report', progress: 100, unlocked: true, icon_name: 'FileText' },
+        { id: 'community_voice', title: 'Community Voice', description: 'Engage with 5 community feed posts', progress: 60, unlocked: false, icon_name: 'MessageCircle' },
+        { id: 'watchdog', title: 'Neighborhood Watchdog', description: 'Report 10 local issues', progress: 80, unlocked: false, icon_name: 'Eye' },
+      ]);
+      setInsights([
+        { id: '1', message: 'Water supply issues surged 23% this month in your ward.', category: 'Water Supply', trend: 'up' },
+        { id: '2', message: 'Average resolution time improved to 3.8 days — a new ward best.', category: 'Performance', trend: 'down' },
+        { id: '3', message: 'Sanitation complaints are at a 6-month low in your district.', category: 'Sanitation', trend: 'down' },
+      ]);
+      setFeedPosts([
+        { id: 1, title: 'Pothole on 8th Avenue resolved!', content: 'Huge shoutout to the zoning department! Reported a critical pothole near the school zone and it was fully patched within 48 hours.', category: 'Community Issue', author_name: 'Sarah Jenkins', author_role: 'Citizen', likes_count: 18, comments_count: 4, created_at: new Date().toISOString(), is_liked: false, is_bookmarked: false },
+        { id: 2, title: 'City Green Initiative Launch Event', content: 'Join us this Saturday at Golden Gate Park for the annual community tree planting drive.', category: 'Event', author_name: 'District 5 Council', author_role: 'Government', likes_count: 42, comments_count: 12, created_at: new Date().toISOString(), is_liked: false, is_bookmarked: false },
+      ]);
+      setSavedReports([]);
     } finally {
       setIsLoading(false);
     }
@@ -180,7 +206,15 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setReports(await res.json());
       }
     } catch (error) {
-      console.error('Failed to fetch citizen reports', error);
+      console.warn('Backend offline — loading offline demo reports.', error);
+      // Offline Demo Fallback: populate with mock reports
+      setReports([
+        { id: 1, title: 'Clogged Storm Drain on Market St', description: 'Heavy rain is causing water to accumulate on the sidewalk.', category: 'Water Supply', priority: 'High', status: 'In Progress', assigned_department: 'Water Supply', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 45, ward: 'Ward 3 - Financial', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
+        { id: 2, title: 'Flickering Streetlight near 22nd St Station', description: 'The streetlight is flashing rapidly, creating visibility issues at night.', category: 'Electricity', priority: 'Low', status: 'Open', assigned_department: 'Electricity', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 10, ward: 'Ward 1 - Richmond', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
+        { id: 3, title: 'Illegal Dumping in Alleyway', description: 'Multiple mattresses and electronic waste left in the alley behind 452 Mission Street.', category: 'Sanitation', priority: 'Medium', status: 'Resolved', assigned_department: 'Sanitation', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 100, ward: 'Ward 4 - Mission', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: true },
+        { id: 4, title: 'Exposed Electrical Wiring near Public Park', description: 'Damaged ground junction box exposing high-voltage wiring right next to the children\'s play area.', category: 'Electricity', priority: 'Critical', status: 'Open', assigned_department: 'Electricity', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 0, ward: 'Ward 2 - Marina', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
+        { id: 5, title: 'Damaged Guardrail on Overpass', description: 'A collision has destroyed a 15-foot section of the safety guardrail.', category: 'Roads', priority: 'High', status: 'In Progress', assigned_department: 'Roads', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 20, ward: 'Ward 3 - Financial', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
+      ]);
     }
   }, [isAuthenticated, token, getHeaders]);
 

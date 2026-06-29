@@ -109,6 +109,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       showNotification(`Welcome back, ${user.first_name}!`, 'success');
     } catch (err: any) {
+      // Offline Demo Mode: if the backend is unreachable, fall back to a mock user session
+      const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
+      if (isNetworkError) {
+        const emailLower = email.toLowerCase();
+        let role: 'Citizen' | 'Government' | 'NGO' | 'Admin' = 'Citizen';
+        let subRole = 'Resident';
+        if (emailLower.includes('admin') || emailLower.includes('super')) {
+          role = 'Admin'; subRole = 'Super Administrator';
+        } else if (emailLower.includes('gov') || emailLower.includes('municipal') || emailLower.includes('officer') || emailLower.includes('dept') || emailLower.includes('ward')) {
+          role = 'Government'; subRole = 'Municipal Officer';
+        } else if (emailLower.includes('ngo')) {
+          role = 'NGO'; subRole = 'Field Coordinator';
+        }
+
+        const firstName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+        const mockUser: UserResponse = {
+          id: 1,
+          first_name: firstName || 'Demo',
+          last_name: role,
+          email,
+          phone: '+1-555-0100',
+          role,
+          sub_role: subRole,
+          city: 'San Francisco',
+          state: 'California',
+          country: 'USA',
+          organization: role === 'Government' ? 'San Francisco City Hall' : role === 'Admin' ? 'CivicMind Operations' : 'CivicMind Community',
+          email_verified: true,
+          account_status: 'active',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        const mockToken = 'offline-demo-token-' + Date.now();
+        setToken(mockToken);
+        setCurrentUser(mockUser);
+
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('token', mockToken);
+        storage.setItem('user', JSON.stringify(mockUser));
+
+        showNotification(`Welcome, ${mockUser.first_name}! Running in Offline Demo Mode — backend server is not reachable.`, 'info');
+        setIsAuthenticating(false);
+        return; // Do not re-throw — login succeeded via demo fallback
+      }
+
       showNotification(err.message || 'Login failed.', 'error');
       throw err;
     } finally {
