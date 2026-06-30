@@ -1,0 +1,28 @@
+# ============================================
+# Render.com Blueprint (Infrastructure as Code)
+# ============================================
+# Docs: https://docs.render.com/blueprint-spec
+
+services:
+  - type: web
+    name: civicmind-ai-backend
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CSRF_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: "sqlite+aiosqlite:///./civicmind.db"
+      - key: PYTHON_VERSION
+        value: "3.11.12"
