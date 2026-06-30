@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+const getBackendHost = () => {
+  const base = localStorage.getItem('VITE_API_BASE_URL') || 'http://localhost:8000/api/v1';
+  try {
+    const url = new URL(base);
+    return `${url.protocol}//${url.host}`;
+  } catch {
+    return 'http://localhost:8000';
+  }
+};
+
 import { useIssues } from '../../context/IssueContext';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -333,14 +344,14 @@ const IssueDetailPage: React.FC = () => {
               {issue.attachments.map(att => (
                 <a
                   key={att.id}
-                  href={`http://localhost:8000${att.file_path}`}
+                  href={`${getBackendHost()}${att.file_path}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-xl overflow-hidden border border-slate-700 bg-slate-900/60 hover:border-blue-500 transition-all group"
                 >
                   {att.file_type === 'image' ? (
                     <img
-                      src={`http://localhost:8000${att.file_path}`}
+                      src={`${getBackendHost()}${att.file_path}`}
                       alt={att.original_name}
                       className="w-full h-24 object-cover group-hover:opacity-90 transition-opacity"
                     />

@@ -210,7 +210,7 @@ const MOCK_LOGS: SystemLog[] = [
 ];
 
 // Helper to check for active auth token and fetch from backend
-const API_BASE = "http://localhost:8000/api/v1/system";
+const API_BASE = (localStorage.getItem('VITE_API_BASE_URL') || 'http://localhost:8000/api/v1') + '/system';
 async function fetchSystemAPI(endpoint: string, method: string = "GET", body?: any): Promise<any> {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No authorization token present.");

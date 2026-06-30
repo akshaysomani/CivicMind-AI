@@ -7,7 +7,7 @@ import type {
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 const DRAFT_KEY = 'civicmind_issue_draft';
 
 const DEFAULT_FILTERS: IssueFilters = {

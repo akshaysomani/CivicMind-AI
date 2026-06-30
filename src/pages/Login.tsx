@@ -16,6 +16,18 @@ export const Login: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [customApiUrl, setCustomApiUrl] = useState(localStorage.getItem('VITE_API_BASE_URL') || '');
+  const [showSettings, setShowSettings] = useState(false);
+
+  const handleSaveSettings = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customApiUrl.trim()) {
+      localStorage.setItem('VITE_API_BASE_URL', customApiUrl.trim());
+    } else {
+      localStorage.removeItem('VITE_API_BASE_URL');
+    }
+    window.location.reload();
+  };
 
   // If already logged in, redirect immediately
   useEffect(() => {
@@ -149,6 +161,47 @@ export const Login: React.FC = () => {
           <Link to="/register" className="font-semibold text-primary hover:text-primary-dark transition-colors">
             Register Workspace
           </Link>
+        </div>
+
+        {/* API Settings configuration toggler */}
+        <div className="mt-6 border-t border-white/5 pt-4 text-center">
+          <button
+            type="button"
+            onClick={() => setShowSettings(!showSettings)}
+            className="text-[10px] text-slate-500 hover:text-slate-350 transition-colors uppercase tracking-wider font-bold"
+          >
+            {showSettings ? 'Hide Backend Settings' : 'Configure Backend Connection'}
+          </button>
+
+          {showSettings && (
+            <div className="mt-4 p-4 rounded-xl bg-slate-950/40 border border-white/5 text-left space-y-3">
+              <div className="text-[10px] text-slate-450 leading-relaxed">
+                If accessing the platform from a phone or other device, enter your local server address (e.g. <code>http://192.168.1.15:8000/api/v1</code>).
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="apiUrl" className="text-[9px] font-bold uppercase tracking-wider text-slate-500">
+                  Backend API Base URL
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="apiUrl"
+                    value={customApiUrl}
+                    onChange={(e) => setCustomApiUrl(e.target.value)}
+                    className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900/60 border border-white/10 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-primary"
+                    placeholder="http://localhost:8000/api/v1"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveSettings}
+                    className="px-3 py-1.5 rounded-lg bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-xs font-semibold transition-all"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </GlassCard>
     </div>

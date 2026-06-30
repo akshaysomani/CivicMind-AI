@@ -6,7 +6,7 @@ import { SectionHeader } from '../components/SectionHeader';
 import { MailCheck, KeyRound, ArrowRight } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
 
 export const VerifyEmail: React.FC = () => {
   const navigate = useNavigate();
