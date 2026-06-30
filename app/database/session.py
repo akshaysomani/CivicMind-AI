@@ -61,9 +61,35 @@ ReadAsyncSessionLocal = async_sessionmaker(
     autoflush=False
 )
 
+from datetime import datetime
+from sqlalchemy import DateTime
+from sqlalchemy.orm import Mapper
+
 class Base(DeclarativeBase):
     """Base declarative class for all SQLAlchemy database models."""
     pass
+
+@event.listens_for(Mapper, "before_insert")
+def before_insert_listener(mapper, connection, target):
+    for table_col in mapper.columns:
+        if isinstance(table_col.type, DateTime):
+            try:
+                val = getattr(target, table_col.name)
+                if val is not None and isinstance(val, datetime) and val.tzinfo is not None:
+                    setattr(target, table_col.name, val.replace(tzinfo=None))
+            except AttributeError:
+                pass
+
+@event.listens_for(Mapper, "before_update")
+def before_update_listener(mapper, connection, target):
+    for table_col in mapper.columns:
+        if isinstance(table_col.type, DateTime):
+            try:
+                val = getattr(target, table_col.name)
+                if val is not None and isinstance(val, datetime) and val.tzinfo is not None:
+                    setattr(target, table_col.name, val.replace(tzinfo=None))
+            except AttributeError:
+                pass
 
 # Keep count of slow queries for API observability dashboard
 SLOW_QUERY_COUNT = 0

@@ -28,7 +28,7 @@ class FeedPost(Base):
     author_role: Mapped[str] = mapped_column(String(50), default="Citizen", nullable=False)
     likes_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     comments_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     # Relationships
     liked_by_users = relationship("User", secondary=liked_feed_posts, backref="liked_posts")

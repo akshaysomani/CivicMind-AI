@@ -32,8 +32,8 @@ class EmergencyIncident(Base):
     # Assignment
     assigned_officer_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     # Relationships
     report = relationship("Report")
@@ -49,7 +49,7 @@ class EmergencyTimelineEvent(Base):
     incident_id: Mapped[int] = mapped_column(Integer, ForeignKey("emergency_incidents.id", ondelete="CASCADE"), nullable=False)
     event: Mapped[str] = mapped_column(String(50), nullable=False)  # "Incident Reported", "Verified", "Assigned", "Response Started", "Resources Deployed", "Citizen Updated", "Resolved", "Closed"
     note: Mapped[str] = mapped_column(Text, nullable=True)
-    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     incident = relationship("EmergencyIncident", back_populates="timeline")
 
@@ -64,6 +64,6 @@ class EmergencyResource(Base):
     status: Mapped[str] = mapped_column(String(30), default="Standby", nullable=False)  # "Standby", "Dispatched", "On Site", "Released"
     allocated_count: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     confidence: Mapped[float] = mapped_column(Float, default=0.90, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     incident = relationship("EmergencyIncident", back_populates="resources")

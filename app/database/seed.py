@@ -9,11 +9,14 @@ from app.models.resource import Resource
 from app.models.gis import Ward, AdminBoundary
 from app.core import security
 import json
+import sys
 
 async def seed_db(session: AsyncSession):
+    is_testing = "pytest" in sys.modules
+
     # 1. Seed Alerts if empty
     result = await session.execute(select(Alert))
-    if not result.scalars().first():
+    if is_testing and not result.scalars().first():
         alerts = [
             Alert(
                 title="Road Closure: Main Street Pipeline Maintenance",
@@ -64,7 +67,7 @@ async def seed_db(session: AsyncSession):
 
     # 2. Seed FeedPosts if empty
     result = await session.execute(select(FeedPost))
-    if not result.scalars().first():
+    if is_testing and not result.scalars().first():
         posts = [
             FeedPost(
                 title="Pothole on 8th Avenue resolved!",
@@ -201,7 +204,7 @@ async def seed_db(session: AsyncSession):
 
     # 5. Seed Announcements if empty
     ann_result = await session.execute(select(Announcement))
-    if not ann_result.scalars().first():
+    if is_testing and not ann_result.scalars().first():
         announcements = [
             Announcement(
                 title="Road Repair Advisory: Ward 1",
@@ -240,7 +243,7 @@ async def seed_db(session: AsyncSession):
     for user in users:
         # Check if this user already has reports
         rep_result = await session.execute(select(Report).where(Report.citizen_id == user.id))
-        if not rep_result.scalars().first():
+        if is_testing and not rep_result.scalars().first():
             reports = [
                 Report(
                     title="Clogged Storm Drain on Market St",

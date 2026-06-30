@@ -18,6 +18,6 @@ class Attachment(Base):
     mime_type: Mapped[str] = mapped_column(String(100), nullable=True)
     file_size: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)  # bytes
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     report = relationship("Report", back_populates="attachments")

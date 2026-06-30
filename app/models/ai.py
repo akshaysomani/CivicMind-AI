@@ -12,8 +12,8 @@ class AIConversation(Base):
     is_pinned: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     category: Mapped[str] = mapped_column(String(50), default="General Conversation", nullable=False)
     
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     messages: Mapped[list["AIMessage"]] = relationship("AIMessage", back_populates="conversation", cascade="all, delete-orphan", order_by="AIMessage.id")
 
@@ -26,7 +26,7 @@ class AIMessage(Base):
     
     sender: Mapped[str] = mapped_column(String(20), nullable=False)  # "user", "agent", "system"
     text: Mapped[str] = mapped_column(Text, nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
     
     agent_name: Mapped[str] = mapped_column(String(50), nullable=True)
     category: Mapped[str] = mapped_column(String(50), nullable=True)

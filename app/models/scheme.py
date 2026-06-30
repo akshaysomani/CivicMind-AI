@@ -12,7 +12,7 @@ class SavedScheme(Base):
     scheme_title: Mapped[str] = mapped_column(String(200), nullable=False)
     scheme_category: Mapped[str] = mapped_column(String(100), nullable=False)
     
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     # Relationships
     user = relationship("User")

@@ -16,7 +16,7 @@ class StatusHistory(Base):
     new_status: Mapped[str] = mapped_column(String(30), nullable=False)
     note: Mapped[str] = mapped_column(Text, nullable=True)
 
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     report = relationship("Report", back_populates="status_history")
     changed_by = relationship("User", foreign_keys=[changed_by_id])

@@ -12,5 +12,5 @@ class Announcement(Base):
     priority: Mapped[str] = mapped_column(String(20), default="Medium", nullable=False) # Low, Medium, High, Critical
     target_audience: Mapped[str] = mapped_column(String(100), default="All", nullable=False) # All, or Ward names
     status: Mapped[str] = mapped_column(String(20), default="Published", nullable=False) # Published, Draft, Scheduled, Archived
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)

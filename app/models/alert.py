@@ -16,4 +16,4 @@ class Alert(Base):
     distance: Mapped[str] = mapped_column(String(50), nullable=False) # e.g. "1.2 miles", "500m"
     alert_type: Mapped[str] = mapped_column(String(50), nullable=False) # Road Closure, Flood, Weather, Traffic, Power Outage, Water Supply, Medical
     status: Mapped[str] = mapped_column(String(20), default="Active", nullable=False) # Active, Resolved
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)

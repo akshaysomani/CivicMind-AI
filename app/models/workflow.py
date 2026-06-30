@@ -14,8 +14,8 @@ class NotificationPreference(Base):
     push_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     quiet_hours_start: Mapped[str] = mapped_column(String(5), nullable=True)  # HH:MM format
     quiet_hours_end: Mapped[str] = mapped_column(String(5), nullable=True)    # HH:MM format
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     user = relationship("User", backref="notification_preference")
 
@@ -30,7 +30,7 @@ class WorkflowRule(Base):
     delay: Mapped[int] = mapped_column(Integer, default=0, nullable=False)  # in seconds
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     user = relationship("User", backref="workflow_rules")
 
@@ -43,6 +43,6 @@ class WorkflowHistory(Base):
     trigger_event: Mapped[str] = mapped_column(String(50), nullable=False)
     execution_status: Mapped[str] = mapped_column(String(30), nullable=False)  # success, failed, delayed
     details: Mapped[str] = mapped_column(String(500), nullable=True)
-    executed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    executed_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), nullable=False)
 
     rule = relationship("WorkflowRule", backref="execution_history")

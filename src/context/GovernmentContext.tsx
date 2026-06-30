@@ -144,32 +144,8 @@ export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       if (notiRes.ok) setNotifications(await notiRes.json());
 
     } catch (error) {
-      console.warn('Backend offline — loading offline demo data for government dashboard.', error);
-      // Offline Demo Fallback: populate with mock data so the command center is interactive
-      setKpis({ total_issues: 47, open_issues: 12, resolved_today: 5, pending_approval: 8, critical_issues: 3, avg_resolution_time: '4.2 days', citizen_satisfaction: 87, department_efficiency: 92 });
-      setDepartments([
-        { name: 'Water Supply', open_cases: 5, resolved_cases: 18, avg_response_time: '3.1 days', performance: 88 },
-        { name: 'Electricity', open_cases: 3, resolved_cases: 22, avg_response_time: '2.5 days', performance: 94 },
-        { name: 'Roads', open_cases: 4, resolved_cases: 15, avg_response_time: '5.2 days', performance: 78 },
-        { name: 'Sanitation', open_cases: 2, resolved_cases: 20, avg_response_time: '1.8 days', performance: 96 },
-        { name: 'Public Safety', open_cases: 1, resolved_cases: 12, avg_response_time: '4.0 days', performance: 85 },
-      ]);
-      setWards([
-        { name: 'Ward 1 - Richmond', open_cases: 3, resolution_rate: 82, population_coverage: 62000, response_time: '3.5 days', trend: [5, 3, 4, 2, 3] },
-        { name: 'Ward 2 - Marina', open_cases: 2, resolution_rate: 88, population_coverage: 48000, response_time: '2.8 days', trend: [4, 2, 3, 1, 2] },
-        { name: 'Ward 3 - Financial', open_cases: 4, resolution_rate: 76, population_coverage: 55000, response_time: '4.1 days', trend: [6, 5, 4, 3, 4] },
-        { name: 'Ward 4 - Mission', open_cases: 2, resolution_rate: 91, population_coverage: 72000, response_time: '2.1 days', trend: [3, 2, 1, 2, 2] },
-        { name: 'Ward 5 - Sunset', open_cases: 1, resolution_rate: 94, population_coverage: 58000, response_time: '1.9 days', trend: [2, 1, 1, 1, 1] },
-      ]);
-      setResources({ available_officers: 45, active_teams: 12, emergency_vehicles: 8, maintenance_teams: 6, medical_units: 5, equipment_status: 'Optimal', budget_utilization: 68.5 });
-      setAnnouncements([
-        { id: 1, title: 'Road Repair Advisory: Ward 1', content: 'Main street road repairs scheduled from June 25 to June 30.', priority: 'Medium', target_audience: 'Ward 1 - Richmond', status: 'Published', created_at: new Date().toISOString() },
-        { id: 2, title: 'Water Reservoir Cleaning Operation', content: 'Scheduled cleaning of the primary water reservoir. Low water pressure expected in Ward 2.', priority: 'High', target_audience: 'Ward 2 - Marina', status: 'Published', created_at: new Date().toISOString() },
-      ]);
-      setNotifications([
-        { id: 1, user_id: 1, title: 'New Critical Report', message: 'A critical electrical hazard has been reported in Ward 2.', type: 'emergency', is_read: false, created_at: new Date().toISOString() },
-        { id: 2, user_id: 1, title: 'Daily Digest', message: '5 reports resolved today. Citizen satisfaction trending upward.', type: 'gov_message', is_read: false, created_at: new Date().toISOString() },
-      ]);
+      console.error('Error refreshing government dashboard:', error);
+      showNotification('Failed to retrieve dashboard stats from backend.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -194,17 +170,8 @@ export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setIssues(await res.json());
       }
     } catch (error) {
-      console.warn('Backend offline — loading offline demo issues for government.', error);
-      // Offline Demo Fallback: populate with mock triaging issues
-      setIssues([
-        { id: 1, title: 'Clogged Storm Drain on Market St', description: 'Heavy rain is causing water to accumulate on the sidewalk.', category: 'Water Supply', priority: 'High', status: 'In Progress', assigned_department: 'Water Supply', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 45, ward: 'Ward 3 - Financial', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 2, title: 'Flickering Streetlight near 22nd St Station', description: 'The streetlight is flashing rapidly, creating visibility issues.', category: 'Electricity', priority: 'Low', status: 'Open', assigned_department: 'Electricity', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 10, ward: 'Ward 1 - Richmond', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 3, title: 'Illegal Dumping in Alleyway', description: 'Multiple mattresses and e-waste in the alley behind 452 Mission Street.', category: 'Sanitation', priority: 'Medium', status: 'Resolved', assigned_department: 'Sanitation', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 100, ward: 'Ward 4 - Mission', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 4, title: 'Exposed Electrical Wiring near Public Park', description: 'Damaged junction box exposing high-voltage wiring.', category: 'Electricity', priority: 'Critical', status: 'Open', assigned_department: 'Electricity', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 0, ward: 'Ward 2 - Marina', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 5, title: 'Water Pipeline Burst on 19th Ave', description: 'Gushing water is flooding the street, threatening surrounding shop basements.', category: 'Water Supply', priority: 'Critical', status: 'In Progress', assigned_department: 'Water Supply', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 15, ward: 'Ward 5 - Sunset', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 6, title: 'Unregulated Construction Noise', description: 'Jackhammers and heavy trucks operating past 11 PM, violating city noise ordinances.', category: 'Public Safety', priority: 'Low', status: 'Open', assigned_department: 'Public Safety', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 30, ward: 'Ward 1 - Richmond', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-        { id: 7, title: 'Damaged Guardrail on Overpass', description: 'A collision has destroyed a 15-foot section of the safety guardrail.', category: 'Roads', priority: 'High', status: 'In Progress', assigned_department: 'Roads', citizen_id: 1, city: 'San Francisco', state: 'California', country: 'USA', progress: 20, ward: 'Ward 3 - Financial', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), is_saved: false },
-      ]);
+      console.error('Error fetching government issues:', error);
+      showNotification('Failed to retrieve issues from backend.', 'error');
     }
   }, [isAuthenticated, token, getHeaders]);
 
