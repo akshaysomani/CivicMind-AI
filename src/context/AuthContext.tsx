@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNotifications } from './NotificationContext';
+import { logFirebaseEvent } from '../services/firebase';
 
 export interface UserResponse {
   id: number;
@@ -64,6 +65,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sessionStorage.removeItem('token');
       sessionStorage.removeItem('user');
       showNotification('Successfully logged out.', 'info');
+      logFirebaseEvent('logout');
     }
   }, [token, showNotification]);
 
@@ -102,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { access_token, user } = resData;
       setToken(access_token);
       setCurrentUser(user);
+      logFirebaseEvent('login', { role: user.role, email: user.email });
 
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem('token', access_token);
@@ -132,6 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       showNotification('Account created successfully! Please check your email to verify.', 'success');
+      logFirebaseEvent('sign_up', { role: registerData.role, email: registerData.email });
     } catch (err: any) {
       showNotification(err.message || 'Registration failed.', 'error');
       throw err;

@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { logFirebaseEvent } from './services/firebase';
 
 // Providers
 import { ThemeProvider } from './context/ThemeContext';
@@ -110,7 +111,18 @@ const DecisionBriefingsPage = lazy(() => import('./pages/dashboards/DecisionBrie
 const ScheduledReportsPage = lazy(() => import('./pages/dashboards/ScheduledReportsPage'));
 const ReportViewerPage = lazy(() => import('./pages/dashboards/ReportViewerPage'));
 
+const AnalyticsTracker: React.FC = () => {
+  const location = useLocation();
 
+  React.useEffect(() => {
+    logFirebaseEvent('page_view', {
+      page_path: location.pathname,
+      page_search: location.search,
+    });
+  }, [location]);
+
+  return null;
+};
 
 export const App: React.FC = () => {
   return (
@@ -133,6 +145,7 @@ export const App: React.FC = () => {
                     <AdminProvider>
                      <QAProvider>
                       <HashRouter>
+                       <AnalyticsTracker />
                        <PresentationProvider>
                          <PresentationTour />
                          <Suspense
