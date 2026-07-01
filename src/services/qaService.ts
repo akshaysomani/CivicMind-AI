@@ -96,7 +96,7 @@ export interface QAHealth {
 const API_BASE = (localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1') + '/qa';
 
 async function fetchQAAPI(endpoint: string, method: string = "GET", body?: any): Promise<any> {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   if (!token) throw new Error("No authorization token present.");
   
   const headers: HeadersInit = {
