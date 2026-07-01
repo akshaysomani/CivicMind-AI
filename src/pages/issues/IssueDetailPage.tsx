@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const getBackendHost = () => {
-  const base = localStorage.getItem('VITE_API_BASE_URL') || 'http://localhost:8000/api/v1';
+  const base = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
   try {
     const url = new URL(base);
     return `${url.protocol}//${url.host}`;
