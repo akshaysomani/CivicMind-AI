@@ -2,11 +2,15 @@
   "build": {
     "env": {
       "PYTHON_VERSION": "3.11",
+      "UV_PYTHON": "3.11",
+      "UV_PYTHON_PREFERENCE": "only-managed",
       "PYO3_USE_ABI3_FORWARD_COMPATIBILITY": "1"
     }
   },
   "env": {
     "PYTHON_VERSION": "3.11",
+    "UV_PYTHON": "3.11",
+    "UV_PYTHON_PREFERENCE": "only-managed",
     "PYO3_USE_ABI3_FORWARD_COMPATIBILITY": "1"
   }
 }
