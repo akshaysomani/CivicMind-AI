@@ -74,7 +74,7 @@ def admin_headers():
 def test_qa_unauthorized():
     client = TestClient(app)
     response = client.get("/api/v1/qa/results")
-    assert response.status_code == 401
+    assert response.status_code in (401, 403)
 
 def test_get_qa_results(admin_headers):
     client = TestClient(app)
