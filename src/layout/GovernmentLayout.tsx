@@ -3,6 +3,7 @@ import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useGovernment } from '../context/GovernmentContext';
+import BackendStatusBanner from '../components/BackendStatusBanner';
 import { 
   LayoutDashboard, FileText, Landmark, Rss, Settings, 
   HelpCircle, ChevronLeft, ChevronRight, Menu, X, Sun, Moon, 
@@ -252,6 +253,7 @@ export const GovernmentLayout: React.FC = () => {
 
       {/* 3. Main Workspace Container */}
       <div className="flex-1 flex flex-col min-w-0">
+        <BackendStatusBanner />
         
         {/* Top Header Navigation */}
         <header className="h-20 border-b border-amber-500/10 dark:border-amber-500/10 light:border-slate-200/80 bg-slate-950/20 dark:bg-slate-950/20 light:bg-white/40 backdrop-blur-lg flex items-center justify-between px-4 sm:px-6 lg:px-8 z-30 shrink-0">

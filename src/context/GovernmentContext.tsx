@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
 import { getApiBase } from '../config';
+import { fetchWithRetry } from '../config/api';
 import type { Report, NotificationItem } from './CitizenContext';
 
 export interface DashboardKPIs {
@@ -129,12 +130,12 @@ export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       const headers = getHeaders();
       const [kpiRes, deptRes, wardRes, resRes, annRes, notiRes] = await Promise.all([
-        fetch(`${API_BASE}/government/dashboard/stats`, { headers }),
-        fetch(`${API_BASE}/government/departments`, { headers }),
-        fetch(`${API_BASE}/government/wards`, { headers }),
-        fetch(`${API_BASE}/government/resources`, { headers }),
-        fetch(`${API_BASE}/government/announcements`, { headers }),
-        fetch(`${API_BASE}/government/notifications`, { headers })
+        fetchWithRetry(`${API_BASE}/government/dashboard/stats`, { headers }),
+        fetchWithRetry(`${API_BASE}/government/departments`, { headers }),
+        fetchWithRetry(`${API_BASE}/government/wards`, { headers }),
+        fetchWithRetry(`${API_BASE}/government/resources`, { headers }),
+        fetchWithRetry(`${API_BASE}/government/announcements`, { headers }),
+        fetchWithRetry(`${API_BASE}/government/notifications`, { headers })
       ]);
 
       if (kpiRes.ok) setKpis(await kpiRes.json());
@@ -145,8 +146,8 @@ export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       if (notiRes.ok) setNotifications(await notiRes.json());
 
     } catch (error) {
-      console.error('Error refreshing government dashboard:', error);
-      showNotification('Failed to retrieve dashboard stats from backend.', 'error');
+      console.warn('Backend warm-up delay during government dashboard refresh:', error);
+      // Suppress premature toast errors during background warm-up
     } finally {
       setIsLoading(false);
     }
@@ -166,13 +167,12 @@ export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         if (filters.ward && filters.ward !== 'All') params.append('ward', filters.ward);
         url += `&${params.toString()}`;
       }
-      const res = await fetch(url, { headers });
+      const res = await fetchWithRetry(url, { headers });
       if (res.ok) {
         setIssues(await res.json());
       }
     } catch (error) {
-      console.error('Error fetching government issues:', error);
-      showNotification('Failed to retrieve issues from backend.', 'error');
+      console.warn('Backend warm-up delay during fetchIssues:', error);
     }
   }, [isAuthenticated, token, getHeaders]);
 

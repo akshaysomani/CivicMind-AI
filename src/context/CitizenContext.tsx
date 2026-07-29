@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
 import { getApiBase } from '../config';
+import { fetchWithRetry } from '../config/api';
 
 export interface Report {
   id: number;
@@ -139,13 +140,13 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const headers = getHeaders();
       
       const [statsRes, alertsRes, notiRes, achievementsRes, insightsRes, feedRes, savedRes] = await Promise.all([
-        fetch(`${API_BASE}/citizen/dashboard/stats`, { headers }),
-        fetch(`${API_BASE}/citizen/alerts`, { headers }),
-        fetch(`${API_BASE}/citizen/notifications`, { headers }),
-        fetch(`${API_BASE}/citizen/achievements`, { headers }),
-        fetch(`${API_BASE}/citizen/insights`, { headers }),
-        fetch(`${API_BASE}/citizen/feed`, { headers }),
-        fetch(`${API_BASE}/citizen/saved-reports`, { headers })
+        fetchWithRetry(`${API_BASE}/citizen/dashboard/stats`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/alerts`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/notifications`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/achievements`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/insights`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/feed`, { headers }),
+        fetchWithRetry(`${API_BASE}/citizen/saved-reports`, { headers })
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());
@@ -157,8 +158,8 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (savedRes.ok) setSavedReports(await savedRes.json());
       
     } catch (error) {
-      console.error('Error refreshing citizen dashboard:', error);
-      showNotification('Failed to retrieve citizen stats from backend.', 'error');
+      console.warn('Backend warm-up delay during citizen dashboard refresh:', error);
+      // Suppress premature toast errors during background warm-up
     } finally {
       setIsLoading(false);
     }
@@ -177,13 +178,12 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (filters.category && filters.category !== 'All') params.append('category', filters.category);
         url += `&${params.toString()}`;
       }
-      const res = await fetch(url, { headers });
+      const res = await fetchWithRetry(url, { headers });
       if (res.ok) {
         setReports(await res.json());
       }
     } catch (error) {
-      console.error('Error fetching citizen reports:', error);
-      showNotification('Failed to retrieve reports from backend.', 'error');
+      console.warn('Error fetching citizen reports:', error);
     }
   }, [isAuthenticated, token, getHeaders]);
 

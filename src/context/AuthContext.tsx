@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNotifications } from './NotificationContext';
 import { logFirebaseEvent } from '../services/firebase';
-import { getApiBaseUrl } from '../config/api';
+import { getApiBaseUrl, fetchWithRetry } from '../config/api';
 
 export interface UserResponse {
   id: number;
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = useCallback(async () => {
     try {
       if (token) {
-        await fetch(`${API_BASE}/auth/logout`, {
+        await fetchWithRetry(`${API_BASE}/auth/logout`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` },
         });
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string, rememberMe: boolean) => {
     setIsAuthenticating(true);
     try {
-      const response = await fetch(`${API_BASE}/auth/login`, {
+      const response = await fetchWithRetry(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (registerData: any) => {
     setIsAuthenticating(true);
     try {
-      const response = await fetch(`${API_BASE}/auth/register`, {
+      const response = await fetchWithRetry(`${API_BASE}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registerData),

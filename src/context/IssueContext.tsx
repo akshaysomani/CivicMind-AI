@@ -7,6 +7,7 @@ import type {
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
 import { getApiBase } from '../config';
+import { fetchWithRetry } from '../config/api';
 
 const API_BASE = getApiBase();
 const DRAFT_KEY = 'civicmind_issue_draft';
@@ -105,18 +106,17 @@ export const IssueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       qs.set('limit', String(params?.limit ?? 12));
       qs.set('offset', String(params?.offset ?? 0));
 
-      const res = await fetch(`${API_BASE}/issues?${qs}`, { headers: authHeaders() });
+      const res = await fetchWithRetry(`${API_BASE}/issues?${qs}`, { headers: authHeaders() });
       if (!res.ok) throw new Error('Failed to load issues.');
       const data: Issue[] = await res.json();
       setIssues(data);
       setTotalCount(data.length);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to fetch issues.';
-      showNotification(msg, 'error');
+      console.warn('Backend warm-up delay during fetchIssues:', err);
     } finally {
       setIsLoading(false);
     }
-  }, [filters, authHeaders, showNotification]);
+  }, [filters, authHeaders]);
 
   // ── Fetch single issue ──────────────────────────────────────────────────────
   const fetchIssue = useCallback(async (id: number): Promise<IssueDetail | null> => {
