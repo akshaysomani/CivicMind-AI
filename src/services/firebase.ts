@@ -13,8 +13,15 @@ const firebaseConfig = {
 // Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Analytics (browser environment only)
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+let analyticsInstance = null;
+if (typeof window !== 'undefined' && firebaseConfig.apiKey) {
+  try {
+    analyticsInstance = getAnalytics(app);
+  } catch (err) {
+    console.warn('[Firebase Analytics] Initialization skipped:', err);
+  }
+}
+export const analytics = analyticsInstance;
 
 /**
  * Logs a custom event to Firebase Analytics.
