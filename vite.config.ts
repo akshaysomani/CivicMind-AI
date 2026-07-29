@@ -6,4 +6,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: process.env.VERCEL ? '/' : '/CivicMind-AI/',
+  server: {
+    host: true,
+    port: 5173
+  }
 })

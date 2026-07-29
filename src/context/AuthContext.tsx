@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNotifications } from './NotificationContext';
 import { logFirebaseEvent } from '../services/firebase';
+import { getApiBaseUrl } from '../config/api';
 
 export interface UserResponse {
   id: number;
@@ -39,7 +40,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = getApiBaseUrl();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<UserResponse | null>(null);

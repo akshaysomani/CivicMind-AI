@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { getApiBase } from '../config';
 import { GlassCard } from '../components/GlassCard';
 import { SectionHeader } from '../components/SectionHeader';
 import { Button } from '../components/Button';
@@ -28,7 +29,7 @@ export const Profile: React.FC = () => {
     }
   };
 
-  const API_ROOT = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+  const API_ROOT = getApiBase();
   // If absolute path is set on backend, resolve it, otherwise fallback to template initials
   const avatarUrl = currentUser.profile_image
     ? `${API_ROOT.replace('/api/v1', '')}${currentUser.profile_image}`

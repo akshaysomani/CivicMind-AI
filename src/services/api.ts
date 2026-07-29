@@ -3,13 +3,15 @@
  * Designed to act as a drop-in replacement once FastAPI endpoints are completed in Module 2.
  */
 
+import { getApiBaseUrl } from '../config/api';
+
 export interface ApiResponse<T> {
   data: T | null;
   error: string | null;
   status: number;
 }
 
-const API_BASE_URL = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiClient {
   private async request<T>(

@@ -93,7 +93,9 @@ export interface QAHealth {
   };
 }
 
-const API_BASE = (localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1') + '/qa';
+import { getApiBase } from '../config';
+
+const API_BASE = getApiBase('qa');
 
 async function fetchQAAPI(endpoint: string, method: string = "GET", body?: any): Promise<any> {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");

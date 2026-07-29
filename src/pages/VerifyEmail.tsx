@@ -5,8 +5,9 @@ import { GlassCard } from '../components/GlassCard';
 import { SectionHeader } from '../components/SectionHeader';
 import { MailCheck, KeyRound, ArrowRight } from 'lucide-react';
 import { useNotifications } from '../context/NotificationContext';
+import { getApiBase } from '../config';
 
-const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = getApiBase();
 
 export const VerifyEmail: React.FC = () => {
   const navigate = useNavigate();

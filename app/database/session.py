@@ -8,11 +8,23 @@ from app.core.config import settings
 
 logger = logging.getLogger("database")
 
+def normalize_db_url(url: str) -> str:
+    if not url:
+        return url
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+asyncpg://", 1)
+    return url
+
+db_url = normalize_db_url(settings.DATABASE_URL)
+replica_url = normalize_db_url(settings.DATABASE_REPLICA_URL or settings.DATABASE_URL)
+
 # Build connection pooling arguments based on database URL type
 connect_args = {}
 pool_kwargs = {}
 
-if "sqlite" in settings.DATABASE_URL:
+if "sqlite" in db_url:
     connect_args["check_same_thread"] = False
 else:
     # PostgreSQL specific pool optimizations
@@ -23,13 +35,12 @@ else:
 
 # Primary write-capable engine
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    db_url,
     connect_args=connect_args,
     **pool_kwargs
 )
 
 # Read replica engine (defaults to primary engine if replica URL matches or database is sqlite)
-replica_url = settings.DATABASE_REPLICA_URL or settings.DATABASE_URL
 replica_connect_args = {"check_same_thread": False} if "sqlite" in replica_url else {}
 replica_pool_kwargs = {}
 if "sqlite" not in replica_url:

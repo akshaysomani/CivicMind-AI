@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
+import { getApiBase } from '../config';
 import type { Report, NotificationItem } from './CitizenContext';
 
 export interface DashboardKPIs {
@@ -98,7 +99,7 @@ interface GovernmentContextType {
 
 const GovernmentContext = createContext<GovernmentContextType | undefined>(undefined);
 
-const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = getApiBase();
 
 export const GovernmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { token, isAuthenticated } = useAuth();

@@ -21,16 +21,33 @@ from app.core import security
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("civicmind_server")
 
+import app.database.session as db_session_module
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Ensure static upload directories exist
     os.makedirs("public/uploads/avatars", exist_ok=True)
     os.makedirs("public/uploads/issues", exist_ok=True)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+
+    try:
+        async with db_session_module.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as e:
+        logger.warning(f"Primary DB initialization failed ({e}). Falling back to SQLite database.")
+        sqlite_url = "sqlite+aiosqlite:///./civicmind.db"
+        db_session_module.engine = db_session_module.create_async_engine(
+            sqlite_url, connect_args={"check_same_thread": False}
+        )
+        db_session_module.read_engine = db_session_module.engine
+        db_session_module.AsyncSessionLocal = db_session_module.async_sessionmaker(
+            bind=db_session_module.engine, class_=db_session_module.AsyncSession, expire_on_commit=False
+        )
+        db_session_module.ReadAsyncSessionLocal = db_session_module.AsyncSessionLocal
+        async with db_session_module.engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
         
     # Run the database seeder
-    async with AsyncSessionLocal() as session:
+    async with db_session_module.AsyncSessionLocal() as session:
         try:
             await seed_db(session)
         except Exception as e:
@@ -48,14 +65,31 @@ app = FastAPI(
 )
 
 # CORS Policy configuration
+cors_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:4173",
+    "http://127.0.0.1:4173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "https://akshaysomani.github.io",
+    "http://akshaysomani.github.io",
+]
+
+env_cors = os.environ.get("CORS_ORIGINS")
+if env_cors:
+    cors_origins.extend([o.strip() for o in env_cors.split(",") if o.strip()])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "https://akshaysomani.github.io", "http://akshaysomani.github.io"],
-    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[0-1])\.\d+\.\d+)(:\d+)?$",
+    allow_origins=cors_origins,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|.*\.vercel\.app|.*\.netlify\.app|.*\.onrender\.com|.*\.up\.railway\.app|.*\.github\.io|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2[0-9]|3[0-1])\.\d+\.\d+)(:\d+)?$",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
-    expose_headers=["Content-Disposition"],
+    expose_headers=["Content-Disposition", "X-Correlation-ID"],
 )
 
 # 1. Global Exception Handler (Error Sanitization)
@@ -183,5 +217,24 @@ async def root():
         "app": settings.PROJECT_NAME,
         "version": settings.APP_VERSION,
         "docs": f"{settings.API_V1_STR}/docs" if settings.DEBUG else "disabled"
+    }
+
+@app.get("/health")
+@app.get(f"{settings.API_V1_STR}/health")
+async def health_check():
+    db_status = "connected"
+    try:
+        from sqlalchemy import text
+        async with db_session_module.engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+    except Exception as e:
+        logger.error(f"Database health check failed: {e}")
+        db_status = "disconnected"
+
+    return {
+        "status": "ok",
+        "database": db_status,
+        "server": "running",
+        "version": "1.0"
     }
 

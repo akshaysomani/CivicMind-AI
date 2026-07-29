@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { useNotifications } from './NotificationContext';
+import { getApiBase } from '../config';
 
 export interface Report {
   id: number;
@@ -108,7 +109,7 @@ interface CitizenContextType {
 
 const CitizenContext = createContext<CitizenContextType | undefined>(undefined);
 
-const API_BASE = localStorage.getItem('VITE_API_BASE_URL') || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const API_BASE = getApiBase();
 
 export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { token, isAuthenticated } = useAuth();

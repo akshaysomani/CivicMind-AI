@@ -1,8 +1,7 @@
-const DEFAULT_API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+import { getApiBaseUrl } from './config/api';
 
 export const getApiBase = (subpath = ''): string => {
-  const savedBase = localStorage.getItem('VITE_API_BASE_URL');
-  const base = savedBase || DEFAULT_API_BASE;
+  const base = getApiBaseUrl();
   
   if (!subpath) return base;
   if (subpath === 'qa') {
@@ -11,7 +10,7 @@ export const getApiBase = (subpath = ''): string => {
   if (subpath === 'system') {
     return `${base}/system`;
   }
-  return `${base}/${subpath}`;
+  return `${base}/${subpath.replace(/^\/+/, '')}`;
 };
 
 export const getBackendHost = (): string => {
