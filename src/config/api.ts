@@ -81,7 +81,7 @@ export const fetchWithRetry = async (
     }
   }
 
-  throw new Error(`Server connection failed after ${maxRetries} retry attempts.`);
+  throw new Error(`Unable to sync workspace data. Please refresh or try again later.`);
 };
 
 export default getApiBaseUrl;

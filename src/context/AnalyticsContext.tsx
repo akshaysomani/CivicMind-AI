@@ -76,8 +76,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setCommunity(dbComm);
       setCitySummary(dbSum);
     } catch (e: any) {
-      setError(e.message || 'Failed to sync database analytics.');
-      showNotification('Failed to retrieve fresh decision insights.', 'error');
+      setError(e.message || 'Unable to sync decision insights right now.');
+      console.warn('Analytics data refresh delay:', e);
     } finally {
       setIsLoading(false);
     }

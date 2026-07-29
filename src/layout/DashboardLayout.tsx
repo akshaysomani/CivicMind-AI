@@ -3,7 +3,6 @@ import { Outlet, NavLink, Link, useNavigate, useLocation } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useCitizen } from '../context/CitizenContext';
-import BackendStatusBanner from '../components/BackendStatusBanner';
 import { 
   LayoutDashboard, PlusCircle, FileText, Rss, Bookmark, 
   BellRing, Award, Settings, HelpCircle, ChevronLeft, ChevronRight, 
@@ -244,7 +243,6 @@ export const DashboardLayout: React.FC = () => {
 
       {/* 3. Main Workspace Container */}
       <div className="flex-1 flex flex-col min-w-0">
-        <BackendStatusBanner />
         
         {/* Top Header Navigation */}
         <header className="h-20 border-b border-white/10 dark:border-white/5 light:border-slate-200/80 bg-slate-950/20 dark:bg-slate-950/20 light:bg-white/40 backdrop-blur-lg flex items-center justify-between px-4 sm:px-6 lg:px-8 z-30 shrink-0">

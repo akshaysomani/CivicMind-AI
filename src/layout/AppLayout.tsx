@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { useTheme } from '../context/ThemeContext';
-import BackendStatusBanner from '../components/BackendStatusBanner';
 
 export const AppLayout: React.FC = () => {
   const { theme } = useTheme();
@@ -14,7 +13,6 @@ export const AppLayout: React.FC = () => {
         color: theme === 'light' ? '#1e293b' : '#e2e8f0',
       }}
     >
-      <BackendStatusBanner />
       <Navbar />
       
       {/* Main Content Area */}

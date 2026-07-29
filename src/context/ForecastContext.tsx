@@ -75,8 +75,8 @@ export const ForecastProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setConfidence(dbConf);
       setGeospatial(dbGeo);
     } catch (e: any) {
-      setError(e.message || 'Failed to sync forecasting parameters.');
-      showNotification('Failed to retrieve forecast coordinates data.', 'error');
+      setError(e.message || 'Unable to load predictive analytics data right now.');
+      console.warn('Forecast data refresh delay:', e);
     } finally {
       setIsLoading(false);
     }
