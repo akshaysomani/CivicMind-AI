@@ -1,3 +1,4 @@
+from typing import Optional
 from datetime import datetime, timezone
 from sqlalchemy import String, Integer, Boolean, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
@@ -10,7 +11,7 @@ class User(Base):
     first_name: Mapped[str] = mapped_column(String(50), nullable=False)
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
-    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    phone: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[str] = mapped_column(String(30), default="Citizen", nullable=False) # Citizen, Government, NGO, Admin
     sub_role: Mapped[str] = mapped_column(String(50), nullable=True) # Municipal Officer, Department Officer, etc.

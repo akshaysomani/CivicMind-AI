@@ -132,6 +132,42 @@ async def get_citizen_reports(
 
     return reports_out
 
+@router.post("/reports", response_model=ReportOut, status_code=status.HTTP_201_CREATED)
+async def create_citizen_report(
+    payload: ReportCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(["Citizen", "NGO", "Government", "Admin"]))
+):
+    """Submit a new report from the citizen router into database."""
+    report = Report(
+        title=payload.title,
+        description=payload.description,
+        category=payload.category,
+        priority=payload.priority,
+        severity=payload.severity,
+        address=payload.address or "Direct Citizen Submission",
+        ward=payload.ward or "Ward 1 - Richmond",
+        city=payload.city or current_user.city,
+        state=payload.state or current_user.state,
+        country=payload.country or current_user.country,
+        postal_code=payload.postal_code,
+        latitude=payload.latitude,
+        longitude=payload.longitude,
+        nearby_landmark=payload.nearby_landmark,
+        is_anonymous=payload.is_anonymous,
+        contact_method=payload.contact_method,
+        consent_given=payload.consent_given,
+        citizen_id=current_user.id,
+        assigned_department="General Administration Department",
+        estimated_response_hours=72,
+        status="Submitted",
+        progress=5,
+    )
+    db.add(report)
+    await db.commit()
+    await db.refresh(report)
+    return report
+
 @router.post("/reports/{report_id}/save", response_model=dict)
 async def toggle_save_report(
     report_id: int,

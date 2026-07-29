@@ -6,7 +6,7 @@ class UserRegister(BaseModel):
     first_name: str = Field(..., max_length=50)
     last_name: str = Field(..., max_length=50)
     email: EmailStr
-    phone: str = Field(..., max_length=20)
+    phone: Optional[str] = Field(None, max_length=20)
     password: str = Field(..., min_length=8)
     role: str = Field(..., description="Citizen, Government, NGO, Admin")
     sub_role: Optional[str] = Field(None, max_length=50)

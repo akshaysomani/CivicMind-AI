@@ -39,7 +39,7 @@ async def get_dashboard_stats(
     total_issues = await db.scalar(select(func.count(Report.id))) or 0
     
     open_issues = await db.scalar(
-        select(func.count(Report.id)).where(Report.status.in_(["New", "Under Review", "Assigned", "In Progress", "Waiting for Citizen"]))
+        select(func.count(Report.id)).where(Report.status.in_(["Submitted", "New", "Under Review", "Assigned", "In Progress", "Waiting for Citizen"]))
     ) or 0
     
     resolved_today = await db.scalar(

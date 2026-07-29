@@ -294,19 +294,36 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const submitMockReport = useCallback(async (title: string, description: string, category: string, priority: string) => {
     if (!isAuthenticated || !token) return;
-    // Note: Actual Module 5 logic handles this, here we do a simple submit for testing/seed verification
     try {
-
-      // Temporary post endpoint (Module 5 will implement full report create).
-      // For now, we mock insert it via custom seed or test simulation on the backend.
-      // But let's build the route in reports.py or here if needed, or simply return local success.
-      // Since Module 5 covers creating issues, we simulate it here by logging locally and reloading reports.
-      console.log('Submitting Mock Report:', { title, description, category, priority });
-      showNotification('Mock issue logged! Full reporting comes in Module 5.', 'success');
+      const headers = getHeaders();
+      const payload = {
+        title,
+        description,
+        category,
+        priority,
+        severity: 'Moderate',
+        address: 'Citizen Portal Direct Entry',
+        city: 'San Francisco',
+        state: 'California',
+        country: 'USA'
+      };
+      const res = await fetch(`${API_BASE}/issues`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        showNotification('Report submitted and synced to Command Center!', 'success');
+        await fetchReports();
+        await refreshDashboard();
+      } else {
+        const err = await res.json();
+        showNotification(err.detail || 'Failed to record report.', 'error');
+      }
     } catch (error) {
       console.error('Failed to submit report', error);
     }
-  }, [isAuthenticated, token, getHeaders, showNotification]);
+  }, [isAuthenticated, token, getHeaders, showNotification, fetchReports, refreshDashboard]);
 
   // Auto-refresh when auth states load
   useEffect(() => {

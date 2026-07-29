@@ -65,7 +65,7 @@ class ReportCreate(ReportBase):
     @field_validator("severity")
     @classmethod
     def validate_severity(cls, v: str) -> str:
-        allowed = {"Minor", "Moderate", "Major", "Emergency"}
+        allowed = {"Minor", "Moderate", "Major", "Emergency", "Low", "Medium", "High", "Critical"}
         if v not in allowed:
             raise ValueError(f"Severity must be one of {allowed}")
         return v
